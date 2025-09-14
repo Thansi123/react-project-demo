@@ -10,7 +10,7 @@ const sampleProjects = [
     goal: 250000,
     start: 100,
     banner:
-      "https://img.freepik.com/free-photo/digital-tablet-screen-futuristic-city_23-2149393752.jpg",
+      "https://dashboard.thefinanser.com/wp-content/uploads/2024/02/Technology.jpg",
   },
 ];
 
