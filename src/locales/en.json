@@ -1,0 +1,23 @@
+{
+    "header": {
+      "home": "Home",
+      "projects": "Projects",
+      "startProject": "Start Project",
+      "dashboard": "Dashboard",
+      "login": "Login",
+      "signup": "Sign Up"
+    },
+    "footer": {
+      "about": "About",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "accessibility": "Accessibility"
+    },
+    "join": {
+      "title": "Join the Movement",
+      "desc": "The platform takes 10% equity, enabling investor dividends from profits.",
+      "invest": "Invest",
+      "launch": "Launch"
+    }
+  }
+  

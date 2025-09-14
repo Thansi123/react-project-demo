@@ -1,6 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function Leadership() {
+  const navigate = useNavigate();
+
   return (
     <section className="p-6 text-center bg-gray-50">
       <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-6">
@@ -14,10 +17,14 @@ function Leadership() {
               For Founders
             </h3>
             <p className="text-gray-600 mb-4">
-              Share your vision and lead your startup journey with the support of investors.
+              Share your vision and lead your startup journey with the support
+              of investors.
             </p>
           </div>
-          <button className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-4 py-2 rounded-lg shadow hover:opacity-90">
+          <button
+            onClick={() => navigate("/start-project")}
+            className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-4 py-2 rounded-lg shadow hover:opacity-90"
+          >
             Start Project
           </button>
         </div>
@@ -32,7 +39,10 @@ function Leadership() {
               Lead the future by investing in innovative and verified projects.
             </p>
           </div>
-          <button className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-4 py-2 rounded-lg shadow hover:opacity-90">
+          <button
+            onClick={() => navigate("/projects")}
+            className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-4 py-2 rounded-lg shadow hover:opacity-90"
+          >
             Invest Now
           </button>
         </div>

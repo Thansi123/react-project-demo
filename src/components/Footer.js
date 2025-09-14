@@ -1,42 +1,34 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Footer() {
-  // helper: smooth scroll to section
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
-    <footer className="w-full bg-gray-100 border-t py-3 text-center mt-auto">
-      <p className="text-sm">&copy; 2025 Crowdfunding. All rights reserved.</p>
-      <div className="flex justify-center space-x-4 mt-2 text-sm">
-        <button
-          onClick={() => scrollToSection("about")}
-          className="text-yellow-600 hover:text-gray-700"
-        >
-          About
-        </button>
-        <button
-          onClick={() => scrollToSection("terms")}
-          className="text-yellow-600 hover:text-gray-700"
-        >
-          Terms
-        </button>
-        <button
-          onClick={() => scrollToSection("privacy")}
-          className="text-yellow-600 hover:text-gray-700"
-        >
-          Privacy
-        </button>
-        <button
-          onClick={() => scrollToSection("accessibility")}
-          className="text-yellow-600 hover:text-gray-700"
-        >
-          Accessibility
-        </button>
+    <footer className="bg-gray-900 text-gray-300 py-8 mt-12">
+      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+        
+        {/* Logo / Brand */}
+        <h2 className="text-lg font-bold text-white">Crowdfunding</h2>
+
+        {/* Links */}
+        <div className="flex flex-wrap gap-6 text-sm">
+          <Link to="/about" className="hover:text-yellow-500 transition">
+            About
+          </Link>
+          <Link to="/privacy" className="hover:text-yellow-500 transition">
+            Privacy Policy
+          </Link>
+          <Link to="/terms" className="hover:text-yellow-500 transition">
+            Terms of Service
+          </Link>
+          <Link to="/accessibility" className="hover:text-yellow-500 transition">
+            Accessibility
+          </Link>
+        </div>
+
+        {/* Copyright */}
+        <p className="text-xs text-gray-400 text-center md:text-right">
+          © {new Date().getFullYear()} Crowdfunding. All rights reserved.
+        </p>
       </div>
     </footer>
   );

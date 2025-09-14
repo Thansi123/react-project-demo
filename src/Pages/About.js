@@ -1,7 +1,10 @@
 import React from "react";
 import { Target, Eye, Mail } from "lucide-react"; // icons
+import { useTranslation } from "react-i18next";
 
 function About() {
+  const { t, i18n } = useTranslation();
+
   return (
     <section
       id="about"

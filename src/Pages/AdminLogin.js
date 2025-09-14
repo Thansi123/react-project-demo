@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function AdminLogin({ navigate }) {
+function AdminLogin() {
   const [formData, setFormData] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -61,7 +63,7 @@ function AdminLogin({ navigate }) {
         {/* Back to Login Link */}
         <p className="mt-4 text-center text-sm text-gray-600">
           <button
-            onClick={() => navigate("login")}
+            onClick={() => navigate("/login")}
             className="text-yellow-600 font-semibold hover:underline"
           >
             Back to Login
