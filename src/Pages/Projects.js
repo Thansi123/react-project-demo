@@ -2,9 +2,22 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const sampleProjects = [
-  // Seed Projects
+  // Pre-Seed Projects
   {
     id: 1,
+    name: "InnoStart",
+    stage: "Preseed",
+    category: "Tech",
+    raised: 5000,
+    goal: 50000,
+    start: 50,
+    banner:
+      "https://static.vecteezy.com/system/resources/previews/006/966/161/non_2x/startup-concept-businessman-touching-icon-start-up-and-icon-network-connection-on-modern-virtual-interface-free-photo.jpg",
+  },
+
+  // Seed Projects
+  {
+    id: 2,
     name: "QiTaah",
     stage: "Seed",
     category: "Tech",
@@ -15,7 +28,7 @@ const sampleProjects = [
       "https://dashboard.thefinanser.com/wp-content/uploads/2024/02/Technology.jpg",
   },
   {
-    id: 2,
+    id: 3,
     name: "AgriNext",
     stage: "Seed",
     category: "Agriculture",
@@ -25,43 +38,49 @@ const sampleProjects = [
     banner:
       "https://media.istockphoto.com/id/1401722160/photo/sunny-plantation-with-growing-soya.jpg?s=612x612&w=0&k=20&c=r_Y3aJ-f-4Oye0qU_TBKvqGUS1BymFHdx3ryPkyyV0w=",
   },
+
+  // Series A
   {
-    id: 3,
+    id: 4,
     name: "FinGo",
-    stage: "Seed",
+    stage: "SeriesA",
     category: "Finance",
-    raised: 75000,
-    goal: 200000,
-    start: 300,
+    raised: 100000,
+    goal: 400000,
+    start: 500,
     banner:
       "https://plus.unsplash.com/premium_photo-1681487769650-a0c3fbaed85a?fm=jpg&q=60&w=3000",
   },
 
-  // Ideation Projects
+  // Series B
   {
-    id: 4,
+    id: 5,
     name: "EduNova",
-    stage: "Ideation",
+    stage: "SeriesB",
     category: "Education",
-    raised: 10000,
-    goal: 150000,
-    start: 200,
+    raised: 250000,
+    goal: 600000,
+    start: 1000,
     banner:
       "https://www.holidify.com/images/cmsuploads/compressed/Colosseum_in_Rome,_Italy_-_April_2007_20181213182254.jpg",
   },
+
+  // Series C
   {
-    id: 5,
+    id: 6,
     name: "FoodLink",
-    stage: "Ideation",
+    stage: "SeriesC",
     category: "Retail",
-    raised: 5000,
-    goal: 80000,
-    start: 100,
+    raised: 400000,
+    goal: 1000000,
+    start: 2000,
     banner:
       "https://plus.unsplash.com/premium_photo-1683141052679-942eb9e77760?fm=jpg&q=60&w=3000",
   },
+
+  // Ideation
   {
-    id: 6,
+    id: 7,
     name: "GreenBuild",
     stage: "Ideation",
     category: "Construction",
@@ -72,9 +91,9 @@ const sampleProjects = [
       "https://www.shutterstock.com/image-photo/construction-worker-wearing-yellow-hard-600nw-2492762443.jpg",
   },
 
-  // IPO Projects
+  // IPO
   {
-    id: 7,
+    id: 8,
     name: "HealthX",
     stage: "IPO",
     category: "Healthcare",
@@ -85,7 +104,7 @@ const sampleProjects = [
       "https://www.flamingotravels.co.in/blog/wp-content/uploads/2022/04/Main_image2.jpg",
   },
   {
-    id: 8,
+    id: 9,
     name: "TravelGo",
     stage: "IPO",
     category: "Travel",
@@ -94,17 +113,6 @@ const sampleProjects = [
     start: 1000,
     banner:
       "https://img.freepik.com/free-photo/shocked-woman-holding-map-phone_23-2148631416.jpg?semt=ais_hybrid&w=740",
-  },
-  {
-    id: 9,
-    name: "MediPlus",
-    stage: "IPO",
-    category: "Healthcare",
-    raised: 200000,
-    goal: 500000,
-    start: 800,
-    banner:
-      "https://media.istockphoto.com/id/1363588189/photo/healthy-lifestyle-on-ketogenic-diet-eating-clean-keto-food-good-health-dietary-in-heart-dish.jpg?s=612x612&w=0&k=20&c=RVW_a2Bq3eYeUWqkUbTUHkiQbGJaAMa9Q2fyljGymgY=",
   },
 ];
 
@@ -133,8 +141,12 @@ function Projects() {
           onChange={(e) => setStage(e.target.value)}
         >
           <option value="">All Stages</option>
-          <option value="Ideation">Ideation</option>
+          <option value="Preseed">Pre-Seed</option>
           <option value="Seed">Seed</option>
+          <option value="SeriesA">Series A</option>
+          <option value="SeriesB">Series B</option>
+          <option value="SeriesC">Series C</option>
+          <option value="Ideation">Ideation</option>
           <option value="IPO">IPO</option>
         </select>
       </div>
@@ -188,12 +200,11 @@ function Projects() {
 
                   {/* Button */}
                   <button
-  onClick={() => navigate(`/project-details/${p.id}`)}
-  className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow hover:opacity-90 transition w-full"
->
-  VIEW DETAILS & INVEST
-</button>
-
+                    onClick={() => navigate(`/project-details/${p.id}`)}
+                    className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow hover:opacity-90 transition w-full"
+                  >
+                    VIEW DETAILS & INVEST
+                  </button>
                 </div>
               </div>
             );

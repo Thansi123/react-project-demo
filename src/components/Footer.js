@@ -7,7 +7,7 @@ function Footer() {
       <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
         
         {/* Logo / Brand */}
-        <h2 className="text-lg font-bold text-white">Crowdfunding</h2>
+        <h2 className="text-lg font-bold text-white">EternalShares</h2>
 
         {/* Links */}
         <div className="flex flex-wrap gap-6 text-sm">

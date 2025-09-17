@@ -2,19 +2,29 @@ import React, { useEffect, useState, useRef } from "react";
 import { Users, DollarSign, Layers } from "lucide-react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
+// Import the same projects (or move to a shared file later)
 const sampleProjects = [
-  { id: 1, name: "QiTaah", stage: "Seed", raised: 50000, goal: 250000 },
-  { id: 2, name: "AgriNext", stage: "Seed", raised: 20000, goal: 100000 },
-  { id: 3, name: "FinGo", stage: "Seed", raised: 75000, goal: 200000 },
-  { id: 4, name: "EduNova", stage: "Ideation", raised: 10000, goal: 150000 },
-  { id: 5, name: "FoodLink", stage: "Ideation", raised: 5000, goal: 80000 },
-  { id: 6, name: "GreenBuild", stage: "Ideation", raised: 2000, goal: 120000 },
-  { id: 7, name: "HealthX", stage: "IPO", raised: 75000, goal: 300000 },
-  { id: 8, name: "TravelGo", stage: "IPO", raised: 120000, goal: 400000 },
-  { id: 9, name: "MediPlus", stage: "IPO", raised: 200000, goal: 500000 },
+  { id: 1, name: "InnoStart", stage: "Preseed", raised: 5000, goal: 50000 },
+  { id: 2, name: "QiTaah", stage: "Seed", raised: 50000, goal: 250000 },
+  { id: 3, name: "AgriNext", stage: "Seed", raised: 20000, goal: 100000 },
+  { id: 4, name: "FinGo", stage: "SeriesA", raised: 100000, goal: 400000 },
+  { id: 5, name: "EduNova", stage: "SeriesB", raised: 250000, goal: 600000 },
+  { id: 6, name: "FoodLink", stage: "SeriesC", raised: 400000, goal: 1000000 },
+  { id: 7, name: "GreenBuild", stage: "Ideation", raised: 2000, goal: 120000 },
+  { id: 8, name: "HealthX", stage: "IPO", raised: 75000, goal: 300000 },
+  { id: 9, name: "TravelGo", stage: "IPO", raised: 120000, goal: 400000 },
 ];
 
-const COLORS = ["#FACC15", "#F59E0B", "#1E293B"];
+const COLORS = [
+  "#FACC15", // bright yellow (golden)
+  "#EAB308", // deep golden yellow
+  "#CA8A04", // dark mustard
+  "#FDE047", // light yellow
+  "#1E293B", // slate/blackish
+  "#000000", // pure black
+  "#A16207", // bronze/golden brown
+];
+
 
 function PlatformStats() {
   const [stats, setStats] = useState({
@@ -26,6 +36,22 @@ function PlatformStats() {
   const [hasAnimated, setHasAnimated] = useState(false);
   const sectionRef = useRef(null);
 
+  // compute values dynamically
+  const endValues = {
+    founders: sampleProjects.length, // 1 founder per project
+    investors: sampleProjects.length * 3, // demo assumption: 3 investors per project
+    raised: sampleProjects.reduce((sum, p) => sum + p.raised, 0),
+    stages: 7,
+  };
+
+  // group projects by stage
+  const stageCounts = Array.from(
+    new Set(sampleProjects.map((p) => p.stage))
+  ).map((stage) => ({
+    name: stage,
+    value: sampleProjects.filter((p) => p.stage === stage).length,
+  }));
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -35,24 +61,16 @@ function PlatformStats() {
           setHasAnimated(true);
         }
       },
-      { threshold: 0.5 } // trigger when 50% of section is visible
+      { threshold: 0.5 }
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
-
     return () => {
       if (sectionRef.current) observer.unobserve(sectionRef.current);
     };
   }, [hasAnimated]);
 
   const animateStats = () => {
-    const endValues = {
-      founders: 3,
-      investors: 10,
-      raised: 457000,
-      stages: 3,
-    };
-
     const duration = 1500;
     const startTime = performance.now();
 
@@ -72,23 +90,8 @@ function PlatformStats() {
     requestAnimationFrame(animate);
   };
 
-  const stageCounts = [
-    {
-      name: "Ideation",
-      value: sampleProjects.filter((p) => p.stage === "Ideation").length,
-    },
-    {
-      name: "Seed",
-      value: sampleProjects.filter((p) => p.stage === "Seed").length,
-    },
-    {
-      name: "IPO",
-      value: sampleProjects.filter((p) => p.stage === "IPO").length,
-    },
-  ];
-
   return (
-    <section ref={sectionRef} className="p-6 mt-16 bg-gray-50">
+    <section ref={sectionRef} className="p-6 mt-0 bg-gray-50">
       <h2 className="text-3xl font-extrabold text-center text-gray-900 mb-10">
         Platform Statistics
       </h2>
@@ -141,7 +144,7 @@ function PlatformStats() {
                 dataKey="value"
               >
                 {stageCounts.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip />

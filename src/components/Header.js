@@ -9,7 +9,7 @@ function Header() {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo / Brand */}
         <Link to="/" className="text-2xl font-bold text-gray-900">
-          Crowdfunding
+          EternalShares
         </Link>
 
         {/* Desktop Nav */}
@@ -23,9 +23,7 @@ function Header() {
           <Link to="/start-project" className="hover:text-yellow-600 transition">
             Start Project
           </Link>
-          <Link to="/dashboard" className="hover:text-yellow-600 transition">
-            Dashboard
-          </Link>
+          
           <Link to="/login" className="hover:text-yellow-600 transition">
             Login
           </Link>

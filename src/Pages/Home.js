@@ -27,7 +27,7 @@ function Home() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
       >
-        Crowdfunding <span className="text-yellow-600">Prosperity</span>
+        Crowdfunding <span className="text-yellow-600">EternalShares</span>
       </motion.h1>
 
       <motion.p
@@ -70,7 +70,7 @@ function Home() {
               href="https://chat.whatsapp.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white px-5 py-3 rounded-xl font-medium shadow hover:opacity-90 transition"
+              className="flex-1 bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-5 py-3 rounded-xl font-medium shadow hover:opacity-90 transition"
             >
               Join Group
             </a>
@@ -97,7 +97,7 @@ function Home() {
             <p className="text-gray-600 mb-6">
               Invest from <span className="font-semibold">100 AED</span> in verified
               projects and earn dividends with up to{" "}
-              <span className="font-semibold">90% profit share</span> annually.
+              <span className="font-semibold">upto90% profit share</span> annually.
             </p>
           </div>
           <button

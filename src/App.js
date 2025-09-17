@@ -20,12 +20,16 @@ import Dashboard from "./Pages/Dashboard";
 import Feedback from "./Pages/Feedback";
 import BehaviorReport from "./Pages/BehaviourReport";
 import Login from "./Pages/Login";
+import ForgotPassword from "./Pages/ForgotPassword";
 import AdminLogin from "./Pages/AdminLogin";
 import Signup from "./Pages/Signup";
 import About from "./Pages/About";
 import Terms from "./Pages/Terms";
 import Privacy from "./Pages/Privacy";
 import Accessibility from "./Pages/Accessibility";
+
+// Stage Page (dynamic)
+import StagePage from "./Pages/StagePage";
 
 function App() {
   return (
@@ -51,7 +55,6 @@ function App() {
           {/* Other Pages */}
           <Route path="/projects" element={<Projects />} />
           <Route path="/project-details/:id" element={<ProjectDetails />} />
-
           <Route path="/invest" element={<Invest />} />
           <Route path="/start-project" element={<StartProject />} />
           <Route path="/admin-panel" element={<AdminPanel />} />
@@ -60,11 +63,15 @@ function App() {
           <Route path="/behavior-report" element={<BehaviorReport />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/accessibility" element={<Accessibility />} />
+
+          {/* Stage Routes (dynamic) */}
+          <Route path="/stage/:stageId" element={<StagePage />} />
         </Routes>
 
         <Footer />

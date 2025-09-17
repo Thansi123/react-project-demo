@@ -4,6 +4,7 @@ import { Keyboard, Headphones, RefreshCcw } from "lucide-react"; // icons
 function Accessibility() {
   
   return (
+    <div className="min-h-screen flex flex-col">
     <section
       id="accessibility"
       className="p-6 mt-16 max-w-5xl mx-auto bg-white shadow-lg rounded-2xl"
@@ -50,6 +51,7 @@ function Accessibility() {
         </div>
       </div>
     </section>
+  </div>
   );
 }
 
