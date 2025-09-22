@@ -25,6 +25,17 @@ const COLORS = [
   "#A16207", // bronze/golden brown
 ];
 
+// ✅ helper function to format numbers like 1K, 2.5M, 1B
+const formatNumber = (num) => {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(/\.0$/, "") + "B";
+  } else if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M";
+  } else if (num >= 1_000) {
+    return (num / 1_000).toFixed(1).replace(/\.0$/, "") + "K";
+  }
+  return num.toString();
+};
 
 function PlatformStats() {
   const [stats, setStats] = useState({
@@ -116,7 +127,7 @@ function PlatformStats() {
             <div>
               <DollarSign className="text-yellow-600 mx-auto mb-2" />
               <p className="font-semibold text-xl">
-                {stats.raised.toLocaleString()} AED
+                {formatNumber(stats.raised)} AED
               </p>
               <p className="text-sm text-gray-500">Raised</p>
             </div>

@@ -20,13 +20,13 @@ function JoinMovement() {
       {/* Buttons */}
       <div className="flex justify-center gap-6">
   <button
-    onClick={() => navigate("/invest")}
+    onClick={() => navigate("/login")}
     className="bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:opacity-95 transform transition"
   >
     Invest
   </button>
   <button
-    onClick={() => navigate("/start-project")}
+    onClick={() => navigate("/login")}
     className="bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-8 py-3 rounded-xl font-semibold shadow-lg hover:scale-105 hover:opacity-95 transform transition"
   >
     Launch

@@ -1,17 +1,23 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 function StagePage() {
   const { stageId } = useParams();
+  const navigate = useNavigate();
 
   // Stage-specific form structure
   const stageForms = {
-    "ideation": {
+    ideation: {
       title: "Ideation Stage",
       fields: [
         { label: "Total Investment (Amount)", type: "number", name: "investment" },
-        { label: "Do you have shareholders?", type: "select", name: "hasShareholders", options: ["Yes", "No"] },
+        {
+          label: "Do you have shareholders?",
+          type: "select",
+          name: "hasShareholders",
+          options: ["Yes", "No"],
+        },
       ],
     },
     "pre-seed": {
@@ -21,7 +27,7 @@ function StagePage() {
         { label: "Number of Shareholders", type: "number", name: "shareholders" },
       ],
     },
-    "seed": {
+    seed: {
       title: "Seed Stage",
       fields: [
         { label: "Total Investment (Amount)", type: "number", name: "investment" },
@@ -60,7 +66,7 @@ function StagePage() {
         { label: "Next 5 Year Projection (in AED)", type: "number", name: "projection" },
       ],
     },
-    "ipo": {
+    ipo: {
       title: "IPO Stage",
       fields: [
         { label: "Total No. of Public Shares (%)", type: "number", name: "publicShares" },
@@ -83,7 +89,13 @@ function StagePage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Form Submitted! " + JSON.stringify(formData, null, 2));
+    console.log("Stage form submitted:", formData);
+
+    // Fake save
+    localStorage.setItem("stageData", JSON.stringify(formData));
+
+    // ✅ Redirect to dashboard after submit
+    navigate("/login");
   };
 
   return (
@@ -120,7 +132,9 @@ function StagePage() {
                   >
                     <option value="">Select</option>
                     {field.options.map((opt, i) => (
-                      <option key={i} value={opt}>{opt}</option>
+                      <option key={i} value={opt}>
+                        {opt}
+                      </option>
                     ))}
                   </select>
                 ) : (
@@ -144,7 +158,9 @@ function StagePage() {
             </motion.button>
           </form>
         ) : (
-          <p className="text-center text-gray-600">No form available for this stage.</p>
+          <p className="text-center text-gray-600">
+            No form available for this stage.
+          </p>
         )}
       </motion.div>
     </section>

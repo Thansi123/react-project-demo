@@ -67,7 +67,7 @@ function Home() {
           </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-auto">
             <a
-              href="https://chat.whatsapp.com/"
+              href="https://chat.whatsapp.com/BwkEsUmbRERGsnriJuHR2R?mode=ems_share_t"
               target="_blank"
               rel="noopener noreferrer"
               className="flex-1 bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-5 py-3 rounded-xl font-medium shadow hover:opacity-90 transition"
@@ -75,7 +75,7 @@ function Home() {
               Join Group
             </a>
             <button
-              onClick={() => navigate("/start-project")}
+              onClick={() => navigate("/login")}
               className="flex-1 bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-5 py-3 rounded-xl font-medium shadow hover:opacity-90 transition"
             >
               Start Project

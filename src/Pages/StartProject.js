@@ -1,5 +1,5 @@
 // StartProjectMegaForm.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 /**
@@ -13,48 +13,47 @@ import { motion } from "framer-motion";
 /* ---------------------------
    Static Lists (same as before)
    --------------------------- */
-const CATEGORIES = [
-  "Tech & Innovation",
-  "Audio",
-  "Camera Gear",
-  "Education",
-  "Energy & Green Tech",
-  "Fashion & Wearables",
-  "Food & Beverages",
-  "Health & Fitness",
-  "Home",
-  "Information Technology",
-  "Phones & Accessories",
-  "Productivity",
-  "Software",
-  "Transportation",
-  "Travel & Outdoors",
-  "Other Innovative Products",
-];
-
-const CREATIVE = [
-  "Art",
-  "Comics",
-  "Dance & Theater",
-  "Film",
-  "Music",
-  "Photography",
-  "Podcasts, Blogs & Vlogs",
-  "Tabletop Games",
-  "Video Games",
-  "Web Series & TV Shows",
-  "Writing & Publishing",
-  "Other Creations",
-];
-
-const COMMUNITY = [
-  "Culture",
-  "Environment",
-  "Human Rights",
-  "Local Businesses",
-  "Wellness",
-  "Other Community Projects",
-];
+const CATEGORY_GROUPS = {
+  "Tech & Innovation": [
+    "Audio",
+    "Camera Gear",
+    "Education",
+    "Energy & Green Tech",
+    "Fashion & Wearables",
+    "Food & Beverages",
+    "Health & Fitness",
+    "Home",
+    "Information Technology",
+    "Phones & Accessories",
+    "Productivity",
+    "Software",
+    "Transportation",
+    "Travel & Outdoors",
+    "Other Innovative Products",
+  ],
+  "Creative Works": [
+    "Art",
+    "Comics",
+    "Dance & Theater",
+    "Film",
+    "Music",
+    "Photography",
+    "Podcasts, Blogs & Vlogs",
+    "Tabletop Games",
+    "Video Games",
+    "Web Series & TV Shows",
+    "Writing & Publishing",
+    "Other Creations",
+  ],
+  "Community Projects": [
+    "Culture",
+    "Environment",
+    "Human Rights",
+    "Local Businesses",
+    "Wellness",
+    "Other Community Projects",
+  ],
+};
 
 const STAGES = [
   "Ideation",
@@ -74,9 +73,8 @@ function StartProject() {
     raisingFor: "Individual",
     location: "UAE",
     bankLocation: "UAE",
-    category: CATEGORIES[0],
-    creativeCategory: "",
-    communityCategory: "",
+    categoryGroup: "Tech & Innovation", // main group
+    subCategory: CATEGORY_GROUPS["Tech & Innovation"][0], // subcategory
     title: "",
     subtitle: "",
     description: "",
@@ -95,14 +93,17 @@ function StartProject() {
     googleMeet: "",
     updates: {
       daily: { enabled: false, time: "" },
-      weekly: { enabled: false, time: "" },
+      weekly: { enabled: false, day: "", time: "" },
     },
     stage: "Ideation",
     stageDetails: {},
     howMuchFundRaising: "",
     willingToGive10Percent: "No",
     shareToPlatformPercentage: "",
-    fundBreakdown: Array.from({ length: 1 }, () => ({ stageName: "Stage 1", amount: "" })),
+    fundBreakdown: Array.from({ length: 1 }, () => ({
+      stageName: "Stage 1",
+      amount: "",
+    })),
     companyWebsite: "",
     profitSharing: "Monthly",
     investmentReturnDays: "",
@@ -117,11 +118,15 @@ function StartProject() {
   // Keep fetched projects placeholder
   const [projects, setProjects] = useState([]);
 
+  // Ref map to avoid duplicate shareholder adds per stage
+  const lastAddShareholderRef = useRef({});
+
   useEffect(() => {
     // ensure arrays limited
     if (form.impactBullets.length > 10) {
       setForm((s) => ({ ...s, impactBullets: s.impactBullets.slice(0, 10) }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // state helpers
@@ -136,11 +141,26 @@ function StartProject() {
       reader.readAsDataURL(file);
     });
 
-  const handleFile = async (e, field) => {
+  // updated handleFile with resolution check
+  const handleFile = async (e, field, requiredWidth, requiredHeight) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const base64 = await fileToBase64(file);
-    setForm((s) => ({ ...s, [field]: base64 }));
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = async () => {
+      if (requiredWidth && requiredHeight) {
+        if (img.width !== requiredWidth || img.height !== requiredHeight) {
+          alert(
+            `Invalid resolution for ${field}. Required: ${requiredWidth}x${requiredHeight}px, got ${img.width}x${img.height}px`
+          );
+          return;
+        }
+      }
+      const base64 = await fileToBase64(file);
+      setForm((s) => ({ ...s, [field]: base64 }));
+    };
   };
 
   /* ---------------------------
@@ -265,12 +285,12 @@ function StartProject() {
         sd[stageName] = {
           totalInvestment: "",
           totalShareHoldersCount: 0,
-          shareholders: [], // { name, photo (base64), shares, amountInvested }
+          shareholders: [], // ✅ start empty, don't add default row
           launched: { status: "No", date: "" },
-          revenues: [], // number strings
+          revenues: [],
           profits: [],
           next5YearsProjection: "",
-          totalPublicSharesPercentage: "", // For IPO
+          totalPublicSharesPercentage: "",
         };
       }
       return { ...s, stageDetails: sd };
@@ -283,42 +303,63 @@ function StartProject() {
       return { ...s, stageDetails: sd };
     });
 
-  const addShareholder = (stageName) =>
+  // FIXED addShareholder: prevents double-adds by using adding state properly
+  const [adding, setAdding] = useState(false);
+
+  const addShareholder = (stageName) => {
+    if (adding) return; // Prevent multiple clicks
+    setAdding(true);
     setForm((s) => {
       const sd = { ...(s.stageDetails || {}) };
       sd[stageName] = sd[stageName] || {};
       sd[stageName].shareholders = sd[stageName].shareholders || [];
-      if (sd[stageName].shareholders.length >= 40) return s;
-      sd[stageName].shareholders.push({ name: "", photo: null, shares: "", amountInvested: "" });
+      if (sd[stageName].shareholders.length >= 40) {
+        setAdding(false);
+        return s;
+      }
+
+      sd[stageName].shareholders.push({
+        name: "",
+        photo: null,
+        shares: "",
+        amountInvested: "",
+      });
       return { ...s, stageDetails: sd };
     });
+    // Reset adding state after state update
+    setTimeout(() => setAdding(false), 0);
+  };
 
-  const updateShareholder = (stageName, idx, key, value) =>
+  const updateShareholder = (stageName, idx, field, value) => {
     setForm((s) => {
       const sd = { ...(s.stageDetails || {}) };
-      sd[stageName] = sd[stageName] || {};
-      sd[stageName].shareholders = sd[stageName].shareholders || [];
-      sd[stageName].shareholders[idx] = {
-        ...(sd[stageName].shareholders[idx] || {}),
-        [key]: value,
-      };
+      const shareholders = [...(sd[stageName].shareholders || [])];
+      shareholders[idx] = { ...shareholders[idx], [field]: value };
+      sd[stageName].shareholders = shareholders;
       return { ...s, stageDetails: sd };
     });
+  };
 
-  const removeShareholder = (stageName, idx) =>
+  const removeShareholder = (stageName, idx) => {
     setForm((s) => {
       const sd = { ...(s.stageDetails || {}) };
-      sd[stageName] = sd[stageName] || {};
-      sd[stageName].shareholders = sd[stageName].shareholders || [];
-      sd[stageName].shareholders.splice(idx, 1);
+      const shareholders = [...(sd[stageName].shareholders || [])];
+      shareholders.splice(idx, 1);
+      sd[stageName].shareholders = shareholders;
       return { ...s, stageDetails: sd };
     });
+  };
 
-  const handleShareholderPhoto = async (e, stageName, idx) => {
-    const file = e.target.files?.[0];
+  const handleShareholderPhoto = (e, stageName, idx) => {
+    const file = e.target.files[0];
     if (!file) return;
-    const base64 = await fileToBase64(file);
-    updateShareholder(stageName, idx, "photo", base64);
+    setForm((s) => {
+      const sd = { ...(s.stageDetails || {}) };
+      const shareholders = [...(sd[stageName].shareholders || [])];
+      shareholders[idx] = { ...shareholders[idx], photo: file };
+      sd[stageName].shareholders = shareholders;
+      return { ...s, stageDetails: sd };
+    });
   };
 
   const setRevenueYears = (stageName, years) =>
@@ -442,28 +483,39 @@ function StartProject() {
               </label>
             </motion.div>
 
-            {/* Category / Creative / Community */}
-            <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Category Group + SubCategory */}
+            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="block">
-                <span className="text-sm font-medium text-gray-700">Category</span>
-                <select value={form.category} onChange={(e) => updateField("category", e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
-                  {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+                <span className="text-sm font-medium text-gray-700">Category Group</span>
+                <select
+                  value={form.categoryGroup}
+                  onChange={(e) =>
+                    setForm((s) => ({
+                      ...s,
+                      categoryGroup: e.target.value,
+                      subCategory: CATEGORY_GROUPS[e.target.value][0], // reset subcategory
+                    }))
+                  }
+                  className="mt-1 w-full border rounded px-3 py-2"
+                >
+                  {Object.keys(CATEGORY_GROUPS).map((group) => (
+                    <option key={group}>{group}</option>
+                  ))}
                 </select>
               </label>
 
               <label className="block">
-                <span className="text-sm font-medium text-gray-700">Creative Works (optional)</span>
-                <select value={form.creativeCategory} onChange={(e) => updateField("creativeCategory", e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
-                  <option value="">— None —</option>
-                  {CREATIVE.map((c) => <option key={c}>{c}</option>)}
-                </select>
-              </label>
-
-              <label className="block">
-                <span className="text-sm font-medium text-gray-700">Community Projects (optional)</span>
-                <select value={form.communityCategory} onChange={(e) => updateField("communityCategory", e.target.value)} className="mt-1 w-full border rounded px-3 py-2">
-                  <option value="">— None —</option>
-                  {COMMUNITY.map((c) => <option key={c}>{c}</option>)}
+                <span className="text-sm font-medium text-gray-700">Sub-Category</span>
+                <select
+                  value={form.subCategory}
+                  onChange={(e) =>
+                    setForm((s) => ({ ...s, subCategory: e.target.value }))
+                  }
+                  className="mt-1 w-full border rounded px-3 py-2"
+                >
+                  {CATEGORY_GROUPS[form.categoryGroup].map((sub) => (
+                    <option key={sub}>{sub}</option> 
+                  ))}
                 </select>
               </label>
             </motion.div>
@@ -476,20 +528,41 @@ function StartProject() {
               <div className="text-sm text-right text-gray-500">Words: {form.description ? form.description.trim().split(/\s+/).filter(Boolean).length : 0} / 200</div>
             </motion.div>
 
-            {/* Logo / Banner */}
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-              <label className="block">
-                <span className="text-sm font-medium text-gray-700">Logo Image</span>
-                <input type="file" accept="image/*" onChange={(e) => handleFile(e, "logo")} className="mt-1 block w-full" />
-                {form.logo && <img src={form.logo} alt="logo preview" className="mt-2 h-20 object-contain rounded" />}
-              </label>
+            {/* Logo */}
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700">Logo Image (Resolution: 300x300)</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFile(e, "logo", 300, 300)} // enforce 300x300
+                className="mt-1 block w-full"
+              />
+              {form.logo && (
+                <img
+                  src={form.logo}
+                  alt="logo preview"
+                  className="mt-2 h-20 object-contain rounded"
+                />
+              )}
+            </label>
 
-              <label className="block">
-                <span className="text-sm font-medium text-gray-700">Banner Image</span>
-                <input type="file" accept="image/*" onChange={(e) => handleFile(e, "banner")} className="mt-1 block w-full" />
-                {form.banner && <img src={form.banner} alt="banner preview" className="mt-2 h-28 w-full object-cover rounded" />}
-              </label>
-            </motion.div>
+            {/* Banner */}
+            <label className="block">
+              <span className="text-sm font-medium text-gray-700">Banner Image (Resolution: 1200x400)</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFile(e, "banner", 1200, 400)} // enforce 1200x400
+                className="mt-1 block w-full"
+              />
+              {form.banner && (
+                <img
+                  src={form.banner}
+                  alt="banner preview"
+                  className="mt-2 h-28 w-full object-cover rounded"
+                />
+              )}
+            </label>
 
             {/* Advantages / Disadvantages */}
             <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -534,25 +607,49 @@ function StartProject() {
             </motion.div>
 
             {/* Market Alternatives */}
-            <motion.div className="grid grid-cols-1 gap-3">
-              <div className="flex items-center gap-4">
-                <div className="text-sm font-medium text-gray-700">Market Alternative Companies?</div>
-                <select value={form.marketAlternativeExists} onChange={(e) => updateField("marketAlternativeExists", e.target.value)} className="border rounded px-2 py-1">
-                  <option>No</option>
-                  <option>Yes</option>
-                </select>
-                {form.marketAlternativeExists === "Yes" && (
-                  <button type="button" onClick={addMarketAlternative} className="ml-auto bg-yellow-500 text-white px-3 py-1 rounded">Add up to 5</button>
-                )}
+            <motion.div className="bg-white border rounded p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-sm font-medium text-gray-700">
+                  Market Alternative Companies?
+                </div>
+                <div>
+                  <select
+                    value={form.marketAlternativeExists}
+                    onChange={(e) => updateField("marketAlternativeExists", e.target.value)}
+                    className="border rounded px-2 py-1 mr-2"
+                  >
+                    <option>No</option>
+                    <option>Yes</option>
+                  </select>
+                  {form.marketAlternativeExists === "Yes" && (
+                    <button
+                      type="button"
+                      onClick={addMarketAlternative}
+                      className={`px-3 py-1 rounded ${form.marketAlternatives.length >= 5 ? "bg-gray-400 text-white cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-600"}`}
+                      disabled={form.marketAlternatives.length >= 5}
+                      title={form.marketAlternatives.length >= 5 ? "Maximum 5 companies allowed" : "Add Company"}
+                    >
+                      Add Company (max 5)
+                    </button>
+                  )}
+                </div>
               </div>
 
               {form.marketAlternatives.map((m, idx) => (
-                <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center">
-                  <input placeholder="Company Name" value={m.name} onChange={(e) => updateMarketAlternative(idx, "name", e.target.value)} className="border rounded px-3 py-2" />
-                  <input placeholder="Website" value={m.website} onChange={(e) => updateMarketAlternative(idx, "website", e.target.value)} className="border rounded px-3 py-2" />
-                  <div>
-                    <button type="button" onClick={() => removeMarketAlternative(idx)} className="bg-black text-white px-3 py-1 rounded">Remove</button>
-                  </div>
+                <div key={idx} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center border rounded p-2 mb-2">
+                  <input
+                    placeholder="Company Name"
+                    value={m.name}
+                    onChange={(e) => updateMarketAlternative(idx, "name", e.target.value)}
+                    className="border rounded px-3 py-2"
+                  />
+                  <input
+                    placeholder="Website"
+                    value={m.website}
+                    onChange={(e) => updateMarketAlternative(idx, "website", e.target.value)}
+                    className="border rounded px-3 py-2"
+                  />
+                  <button type="button" onClick={() => removeMarketAlternative(idx)} className="bg-black text-white px-3 py-1 rounded">Remove</button>
                 </div>
               ))}
             </motion.div>
@@ -560,31 +657,68 @@ function StartProject() {
             {/* Market Competitors */}
             <motion.div className="bg-white border rounded p-4">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-sm font-medium text-gray-700">Market Competitor Companies?</div>
+                <div className="text-sm font-medium text-gray-700">
+                  Market Competitor Companies?
+                </div>
                 <div>
-                  <select value={form.marketCompetitorExists} onChange={(e) => updateField("marketCompetitorExists", e.target.value)} className="border rounded px-2 py-1 mr-2">
+                  <select
+                    value={form.marketCompetitorExists}
+                    onChange={(e) => updateField("marketCompetitorExists", e.target.value)}
+                    className="border rounded px-2 py-1 mr-2"
+                  >
                     <option>No</option>
                     <option>Yes</option>
                   </select>
-                  {form.marketCompetitorExists === "Yes" && <button type="button" onClick={addCompetitor} className="bg-yellow-500 text-white px-3 py-1 rounded">Add Competitor (max 5)</button>}
+                  {form.marketCompetitorExists === "Yes" && (
+                    <button
+                      type="button"
+                      onClick={addCompetitor}
+                      className={`px-3 py-1 rounded ${form.marketCompetitors.length >= 5 ? "bg-gray-400 text-white cursor-not-allowed" : "bg-yellow-500 text-white hover:bg-yellow-600"}`}
+                      disabled={form.marketCompetitors.length >= 5}
+                      title={form.marketCompetitors.length >= 5 ? "Maximum 5 competitors allowed" : "Add Competitor"}
+                    >
+                      Add Competitor (max 5)
+                    </button>
+                  )}
                 </div>
               </div>
 
               {form.marketCompetitors.map((comp, cIdx) => (
                 <div key={cIdx} className="border rounded p-3 mb-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <input placeholder="Company Name" value={comp.name} onChange={(e) => updateCompetitor(cIdx, "name", e.target.value)} className="flex-1 border rounded px-3 py-2" />
-                    <input placeholder="Website" value={comp.website} onChange={(e) => updateCompetitor(cIdx, "website", e.target.value)} className="w-48 border rounded px-3 py-2" />
+                  {/* Company Name + Website (same as Market Alternatives) */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-center mb-3">
+                    <input
+                      placeholder="Company Name"
+                      value={comp.name}
+                      onChange={(e) => updateCompetitor(cIdx, "name", e.target.value)}
+                      className="border rounded px-3 py-2"
+                    />
+                    <input
+                      placeholder="Website"
+                      value={comp.website}
+                      onChange={(e) => updateCompetitor(cIdx, "website", e.target.value)}
+                      className="border rounded px-3 py-2"
+                    />
                     <button type="button" onClick={() => removeCompetitor(cIdx)} className="bg-black text-white px-3 py-1 rounded">Remove</button>
                   </div>
 
-                  <div className="mb-2 text-sm text-gray-700">Special features / functions (add up to 100)</div>
+                  {/* Features list */}
+                  <div className="mb-2 text-sm text-gray-700">Special features / functions (up to 100)</div>
                   <div className="space-y-2">
                     {comp.features?.map((f, fIdx) => (
-                      <div key={fIdx} className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                        <input placeholder="Feature name" value={f.name} onChange={(e) => updateCompetitorFeature(cIdx, fIdx, "name", e.target.value)} className="border rounded px-3 py-2" />
-                        <input placeholder="Short description" value={f.desc} onChange={(e) => updateCompetitorFeature(cIdx, fIdx, "desc", e.target.value)} className="border rounded px-3 py-2" />
-                        <div />
+                      <div key={fIdx} className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <input
+                          placeholder="Feature name"
+                          value={f.name}
+                          onChange={(e) => updateCompetitorFeature(cIdx, fIdx, "name", e.target.value)}
+                          className="border rounded px-3 py-2"
+                        />
+                        <textarea
+                          placeholder="Detailed description"
+                          value={f.desc}
+                          onChange={(e) => updateCompetitorFeature(cIdx, fIdx, "desc", e.target.value)}
+                          className="border rounded px-3 py-2 h-24 resize-y"
+                        />
                       </div>
                     ))}
                     <div className="flex gap-2 mt-2">
@@ -598,7 +732,7 @@ function StartProject() {
             {/* Impact / Risks / Challenges (we included previously in another step, but keep here for completeness) */}
             <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Impact (up to 10)</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">Market Impact (up to 10)</div>
                 {form.impactBullets.map((v, i) => (
                   <div key={i} className="flex gap-2 mb-2">
                     <input value={v} onChange={(e) => setListItem("impactBullets", i, e.target.value)} className="flex-1 border rounded px-3 py-2" placeholder={`Impact ${i + 1}`} />
@@ -611,7 +745,7 @@ function StartProject() {
               </div>
 
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Risks (up to 10)</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">Market Risks (up to 10)</div>
                 {form.risks.map((v, i) => (
                   <div key={i} className="flex gap-2 mb-2">
                     <input value={v} onChange={(e) => setListItem("risks", i, e.target.value)} className="flex-1 border rounded px-3 py-2" placeholder={`Risk ${i + 1}`} />
@@ -624,7 +758,7 @@ function StartProject() {
               </div>
 
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Challenges (up to 10)</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">Market Challenges (up to 10)</div>
                 {form.challenges.map((v, i) => (
                   <div key={i} className="flex gap-2 mb-2">
                     <input value={v} onChange={(e) => setListItem("challenges", i, e.target.value)} className="flex-1 border rounded px-3 py-2" placeholder={`Challenge ${i + 1}`} />
@@ -640,7 +774,7 @@ function StartProject() {
             {/* Google Meet + Updates */}
             <motion.div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
               <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Google Meet (optional)</div>
+                <div className="text-sm font-medium text-gray-700 mb-2">Google Meet </div>
                 <input placeholder="Meet link" value={form.googleMeet} onChange={(e) => updateField("googleMeet", e.target.value)} className="w-full border rounded px-3 py-2" />
               </div>
 
@@ -662,7 +796,43 @@ function StartProject() {
                     <option>No</option>
                     <option>Yes</option>
                   </select>
-                  {form.updates.weekly.enabled && <input type="time" value={form.updates.weekly.time} onChange={(e) => updateField("updates", { ...form.updates, weekly: { ...form.updates.weekly, time: e.target.value } })} className="border rounded px-2 py-1" />}
+                  {form.updates.weekly.enabled && (
+                    <div className="flex items-center gap-2">
+                      {/* Day of Week */}
+                      <select
+                        value={form.updates.weekly.day || ""}
+                        onChange={(e) =>
+                          updateField("updates", {
+                            ...form.updates,
+                            weekly: { ...form.updates.weekly, day: e.target.value },
+                          })
+                        }
+                        className="border rounded px-2 py-1"
+                      >
+                        <option value="">Select Day</option>
+                        <option>Monday</option>
+                        <option>Tuesday</option>
+                        <option>Wednesday</option>
+                        <option>Thursday</option>
+                        <option>Friday</option>
+                        <option>Saturday</option>
+                        <option>Sunday</option>
+                      </select>
+
+                      {/* Time */}
+                      <input
+                        type="time"
+                        value={form.updates.weekly.time || ""}
+                        onChange={(e) =>
+                          updateField("updates", {
+                            ...form.updates,
+                            weekly: { ...form.updates.weekly, time: e.target.value },
+                          })
+                        }
+                        className="border rounded px-2 py-1"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -813,13 +983,11 @@ function StageDetailsPanel({
   handleShareholderPhoto = () => {},
   setRevenueYears = () => {},
 }) {
-  // ensure initial structure
   useEffect(() => {
     ensure();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // helper local state for revenue years input
   const [yearsInput, setYearsInput] = useState("");
 
   return (
@@ -829,24 +997,24 @@ function StageDetailsPanel({
         <div className="text-sm text-gray-500">Dynamic fields based on stage</div>
       </div>
 
-      {/* Total Investment */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+      {/* Total Investment + Launched */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
         <input
           placeholder="Total Investment (AED)"
           value={data.totalInvestment || ""}
           onChange={(e) => update("totalInvestment", e.target.value)}
           className="border rounded px-3 py-2"
         />
-        <input
-          placeholder="Total Shareholders (number)"
-          value={data.totalShareHoldersCount || ""}
-          onChange={(e) => update("totalShareHoldersCount", e.target.value)}
-          className="border rounded px-3 py-2"
-        />
 
         <div>
           <div className="text-sm text-gray-700 mb-1">Launched?</div>
-          <select value={data.launched?.status || "No"} onChange={(e) => update("launched", { ...(data.launched || {}), status: e.target.value })} className="border rounded px-2 py-1">
+          <select
+            value={data.launched?.status || "No"}
+            onChange={(e) =>
+              update("launched", { ...(data.launched || {}), status: e.target.value })
+            }
+            className="border rounded px-2 py-1 w-full"
+          >
             <option>No</option>
             <option>Yes</option>
           </select>
@@ -854,58 +1022,124 @@ function StageDetailsPanel({
             <input
               type="date"
               value={data.launched?.date || ""}
-              onChange={(e) => update("launched", { ...(data.launched || {}), date: e.target.value })}
+              onChange={(e) =>
+                update("launched", { ...(data.launched || {}), date: e.target.value })
+              }
               className="mt-2 border rounded px-3 py-2 w-full"
             />
           )}
         </div>
       </div>
 
-      {/* Shareholders (Add up to 40) */}
+      {/* Shareholders - ONLY ONE SECTION */}
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
-          <div className="text-sm font-medium text-gray-700">Shareholders (add up to 40)</div>
-          <button type="button" onClick={addShareholder} className="bg-yellow-500 text-white px-3 py-1 rounded">Add</button>
+          <div className="text-sm font-medium text-gray-700">
+            Shareholders (add up to 40)
+          </div>
+          <button
+            type="button"
+            onClick={addShareholder}
+            className="bg-yellow-500 text-white px-3 py-1 rounded"
+          >
+            Add
+          </button>
         </div>
 
         <div className="space-y-3">
           {(data.shareholders || []).map((sh, idx) => (
-            <div key={idx} className="grid grid-cols-1 md:grid-cols-4 gap-2 items-center border rounded p-2">
-              <input placeholder="Name" value={sh.name || ""} onChange={(e) => updateShareholder(idx, "name", e.target.value)} className="border rounded px-3 py-2" />
-              <input placeholder="% Shares" value={sh.shares || ""} onChange={(e) => updateShareholder(idx, "shares", e.target.value)} className="border rounded px-3 py-2" />
-              <input placeholder="Amount Invested AED" value={sh.amountInvested || ""} onChange={(e) => updateShareholder(idx, "amountInvested", e.target.value)} className="border rounded px-3 py-2" />
-              <div className="flex flex-col items-end gap-2">
-                <input type="file" accept="image/*" onChange={(e) => handleShareholderPhoto(e, idx)} className="mb-1" />
-                {sh.photo && <img src={sh.photo} alt="shareholder" className="h-12 w-12 object-cover rounded" />}
-                <div className="flex gap-2">
-                  <button type="button" onClick={() => removeShareholder(idx)} className="bg-black text-white px-2 py-1 rounded">Remove</button>
-                </div>
+            <div key={idx} className="flex gap-2 mb-2 items-center">
+              <input
+                type="text"
+                placeholder="Name"
+                value={sh.name}
+                onChange={(e) => updateShareholder(idx, "name", e.target.value)}
+                className="flex-1 border rounded p-2"
+              />
+              <input
+                type="text"
+                placeholder="% Shares"
+                value={sh.shares}
+                onChange={(e) => updateShareholder(idx, "shares", e.target.value)}
+                className="w-24 border rounded p-2"
+              />
+              <input
+                type="text"
+                placeholder="Amount Invested AED"
+                value={sh.amountInvested}
+                onChange={(e) =>
+                  updateShareholder(idx, "amountInvested", e.target.value)
+                }
+                className="flex-1 border rounded p-2"
+              />
+              <div className="flex flex-col">
+                <input
+                  type="file"
+                  onChange={(e) => handleShareholderPhoto(e, idx)}
+                  className="text-sm"
+                />
               </div>
+              <button
+                type="button"
+                onClick={() => removeShareholder(idx)}
+                className="bg-black text-white px-3 py-2 rounded"
+              >
+                Remove
+              </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Revenue / Profit columns */}
+      {/* Revenue / Profit */}
       <div className="mb-4">
         <div className="flex items-center gap-3 mb-2">
           <div className="text-sm font-medium text-gray-700">Revenue/Profit columns</div>
-          <input placeholder="No. of years (max 100)" type="number" min={0} max={100} value={yearsInput} onChange={(e) => setYearsInput(e.target.value)} className="border rounded px-3 py-1 w-40" />
-          <button type="button" onClick={() => { setRevenueYears(yearsInput); setYearsInput(""); }} className="bg-yellow-500 text-white px-3 py-1 rounded">Create</button>
+          <input
+            placeholder="No. of years (max 100)"
+            type="number"
+            min={0}
+            max={100}
+            value={yearsInput}
+            onChange={(e) => setYearsInput(e.target.value)}
+            className="border rounded px-3 py-1 w-40"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setRevenueYears(yearsInput);
+              setYearsInput("");
+            }}
+            className="bg-yellow-500 text-white px-3 py-1 rounded"
+          >
+            Create
+          </button>
         </div>
-
-        <div className="text-sm text-gray-500 mb-2">Enter year-wise revenue and profit after creating columns above.</div>
 
         {(data.revenues || []).length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
             {data.revenues.map((r, i) => (
               <div key={i} className="grid grid-cols-2 gap-2 items-center">
-                <input placeholder={`Revenue year ${i + 1}`} value={r || ""} onChange={(e) => {
-                  const newRevs = [...(data.revenues || [])]; newRevs[i] = e.target.value; update("revenues", newRevs);
-                }} className="border rounded px-3 py-2" />
-                <input placeholder={`Profit year ${i + 1}`} value={data.profits?.[i] || ""} onChange={(e) => {
-                  const newProf = [...(data.profits || [])]; newProf[i] = e.target.value; update("profits", newProf);
-                }} className="border rounded px-3 py-2" />
+                <input
+                  placeholder={`Revenue year ${i + 1}`}
+                  value={r || ""}
+                  onChange={(e) => {
+                    const newRevs = [...(data.revenues || [])];
+                    newRevs[i] = e.target.value;
+                    update("revenues", newRevs);
+                  }}
+                  className="border rounded px-3 py-2"
+                />
+                <input
+                  placeholder={`Profit year ${i + 1}`}
+                  value={data.profits?.[i] || ""}
+                  onChange={(e) => {
+                    const newProf = [...(data.profits || [])];
+                    newProf[i] = e.target.value;
+                    update("profits", newProf);
+                  }}
+                  className="border rounded px-3 py-2"
+                />
               </div>
             ))}
           </div>
@@ -913,15 +1147,31 @@ function StageDetailsPanel({
       </div>
 
       <div className="mb-4">
-        <input placeholder="Next 5 year projection (AED)" value={data.next5YearsProjection || ""} onChange={(e) => update("next5YearsProjection", e.target.value)} className="border rounded px-3 py-2 w-full" />
+        <input
+          placeholder="Next 5 year projection (AED)"
+          value={data.next5YearsProjection || ""}
+          onChange={(e) => update("next5YearsProjection", e.target.value)}
+          className="border rounded px-3 py-2 w-full"
+        />
       </div>
 
-      {/* Special IPO Fields */}
       {stageName === "IPO" && (
         <div className="mb-3">
           <div className="text-sm font-medium text-gray-700 mb-2">IPO Specifics</div>
-          <input placeholder="Total public shares (%)" value={data.totalPublicSharesPercentage || ""} onChange={(e) => update("totalPublicSharesPercentage", e.target.value)} className="border rounded px-3 py-2 w-full mb-2" />
-          <input placeholder="Total Investment (AED) - IPO" value={data.totalInvestment || ""} onChange={(e) => update("totalInvestment", e.target.value)} className="border rounded px-3 py-2 w-full" />
+          <input
+            placeholder="Total public shares (%)"
+            value={data.totalPublicSharesPercentage || ""}
+            onChange={(e) =>
+              update("totalPublicSharesPercentage", e.target.value)
+            }
+            className="border rounded px-3 py-2 w-full mb-2"
+          />
+          <input
+            placeholder="Total Investment (AED) - IPO"
+            value={data.totalInvestment || ""}
+            onChange={(e) => update("totalInvestment", e.target.value)}
+            className="border rounded px-3 py-2 w-full"
+          />
         </div>
       )}
     </div>

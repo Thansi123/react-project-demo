@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff, X } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 function ForgotPassword() {
   const [formData, setFormData] = useState({
@@ -10,16 +10,25 @@ function ForgotPassword() {
     confirmPassword: "",
   });
 
-  // Delete Account states
-  const [deletePassword, setDeletePassword] = useState("");
-  const [showDeletePassword, setShowDeletePassword] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [otpSent, setOtpSent] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // ✅ Send OTP handler
+  const handleSendOtp = () => {
+    if (!formData.email) {
+      alert("Please enter your email first.");
+      return;
+    }
+
+    // Mock API call
+    console.log("Sending OTP to:", formData.email);
+    alert("📩 OTP has been sent to your email!");
+    setOtpSent(true);
   };
 
   // ✅ Reset Password handler
@@ -35,30 +44,9 @@ function ForgotPassword() {
     // TODO: Call Reset Password API
   };
 
-  // ✅ Delete Account handler
-  const handleDelete = (e) => {
-    e.preventDefault();
-
-    if (!deletePassword) {
-      alert("Please enter your password to delete the account.");
-      return;
-    }
-
-    const payload = {
-      email: formData.email, // auto-use entered email
-      password: deletePassword,
-    };
-
-    console.log("Delete Account Request:", payload);
-    // TODO: Call Delete Account API
-
-    setIsDeleteModalOpen(false); // close modal after submit
-    setDeletePassword(""); // reset
-  };
-
   return (
     <section className="relative flex justify-center items-center min-h-screen overflow-hidden">
-      {/* ✅ Background gradient animation (same as login) */}
+      {/* ✅ Background gradient animation */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-700 via-yellow-500 to-yellow-500 animate-gradient-diagonal z-0"></div>
 
       {/* Main Card */}
@@ -87,18 +75,31 @@ function ForgotPassword() {
             />
           </div>
 
-          {/* OTP */}
+          {/* OTP with Send Button */}
           <div>
             <label className="block text-white text-sm">OTP</label>
-            <input
-              type="text"
-              name="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              required
-              className="w-full border border-gray-600 rounded-lg px-4 py-2 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition"
-              placeholder="Enter OTP"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="otp"
+                value={formData.otp}
+                onChange={handleChange}
+                required
+                className="flex-1 border border-gray-600 rounded-lg px-4 py-2 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition"
+                placeholder="Enter OTP"
+              />
+              <button
+                type="button"
+                onClick={handleSendOtp}
+                className={`px-4 py-2 rounded-lg font-semibold transition ${
+                  otpSent
+                    ? "bg-green-600 text-white hover:bg-green-700"
+                    : "bg-yellow-500 text-gray-900 hover:bg-yellow-600"
+                }`}
+              >
+                {otpSent ? "Resend" : "Send"}
+              </button>
+            </div>
           </div>
 
           {/* New Password */}
@@ -152,83 +153,17 @@ function ForgotPassword() {
           </button>
         </form>
 
-        {/* Delete Account Trigger */}
-        <div className="mt-8 text-center">
-          <button
-            onClick={() => setIsDeleteModalOpen(true)}
-            className="text-gray-200 font-semibold hover:underline"
-          >
-            Delete My Account
-          </button>
-        </div>
-
         {/* Back to Login */}
         <p className="text-sm text-gray-300 text-center mt-6">
           Remembered your password?{" "}
-          <Link to="/login" className="text-yellow-400 font-semibold hover:underline">
+          <Link
+            to="/login"
+            className="text-yellow-400 font-semibold hover:underline"
+          >
             Back to Login
           </Link>
         </p>
       </div>
-
-      {/* ✅ Delete Modal */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 rounded-xl shadow-xl p-6 w-full max-w-sm relative">
-            {/* Close */}
-            <button
-              onClick={() => setIsDeleteModalOpen(false)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-red-500"
-            >
-              <X size={20} />
-            </button>
-
-            <h3 className="text-xl font-bold text-white text-center mb-4">
-              Confirm Delete ❌
-            </h3>
-            <p className="text-sm text-gray-300 text-center mb-4">
-              This action is irreversible. Enter your password to delete your account.
-            </p>
-
-            <form onSubmit={handleDelete} className="space-y-4">
-              {/* Email (auto-filled) */}
-              <input
-                type="email"
-                value={formData.email}
-                disabled
-                className="w-full border border-gray-700 bg-gray-800 rounded-lg px-4 py-2 text-gray-400"
-              />
-
-              {/* Password */}
-              <div className="relative">
-                <input
-                  type={showDeletePassword ? "text" : "password"}
-                  value={deletePassword}
-                  onChange={(e) => setDeletePassword(e.target.value)}
-                  required
-                  className="w-full border border-gray-700 rounded-lg px-4 py-2 pr-10 bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
-                  placeholder="Enter password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowDeletePassword(!showDeletePassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-red-500"
-                >
-                  {showDeletePassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-
-              {/* Delete Button */}
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-gray-800 to-red-600 text-white py-2 rounded-lg shadow-lg hover:opacity-90 transition"
-              >
-                Delete Account
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* ✅ Animations */}
       <style>

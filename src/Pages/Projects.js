@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle } from "lucide-react";
+import banner from "../assets/banner-image.jpg";
 
 const sampleProjects = [
   // Pre-Seed Projects
@@ -13,6 +15,7 @@ const sampleProjects = [
     start: 50,
     banner:
       "https://static.vecteezy.com/system/resources/previews/006/966/161/non_2x/startup-concept-businessman-touching-icon-start-up-and-icon-network-connection-on-modern-virtual-interface-free-photo.jpg",
+    verified: false
   },
 
   // Seed Projects
@@ -25,7 +28,8 @@ const sampleProjects = [
     goal: 250000,
     start: 100,
     banner:
-      "https://dashboard.thefinanser.com/wp-content/uploads/2024/02/Technology.jpg",
+      banner,
+    verified: true
   },
   {
     id: 3,
@@ -37,6 +41,7 @@ const sampleProjects = [
     start: 150,
     banner:
       "https://media.istockphoto.com/id/1401722160/photo/sunny-plantation-with-growing-soya.jpg?s=612x612&w=0&k=20&c=r_Y3aJ-f-4Oye0qU_TBKvqGUS1BymFHdx3ryPkyyV0w=",
+    verified: false
   },
 
   // Series A
@@ -50,6 +55,7 @@ const sampleProjects = [
     start: 500,
     banner:
       "https://plus.unsplash.com/premium_photo-1681487769650-a0c3fbaed85a?fm=jpg&q=60&w=3000",
+    verified: false
   },
 
   // Series B
@@ -63,6 +69,7 @@ const sampleProjects = [
     start: 1000,
     banner:
       "https://www.holidify.com/images/cmsuploads/compressed/Colosseum_in_Rome,_Italy_-_April_2007_20181213182254.jpg",
+    verified: false
   },
 
   // Series C
@@ -76,6 +83,7 @@ const sampleProjects = [
     start: 2000,
     banner:
       "https://plus.unsplash.com/premium_photo-1683141052679-942eb9e77760?fm=jpg&q=60&w=3000",
+    verified: false
   },
 
   // Ideation
@@ -89,6 +97,7 @@ const sampleProjects = [
     start: 250,
     banner:
       "https://www.shutterstock.com/image-photo/construction-worker-wearing-yellow-hard-600nw-2492762443.jpg",
+    verified: false
   },
 
   // IPO
@@ -102,6 +111,7 @@ const sampleProjects = [
     start: 500,
     banner:
       "https://www.flamingotravels.co.in/blog/wp-content/uploads/2022/04/Main_image2.jpg",
+    verified: false
   },
   {
     id: 9,
@@ -113,6 +123,7 @@ const sampleProjects = [
     start: 1000,
     banner:
       "https://img.freepik.com/free-photo/shocked-woman-holding-map-phone_23-2148631416.jpg?semt=ais_hybrid&w=740",
+    verified: false
   },
 ];
 
@@ -124,6 +135,14 @@ function Projects() {
     ? sampleProjects.filter((p) => p.stage === stage)
     : sampleProjects;
 
+  const handleProjectClick = (project) => {
+    if (project.verified) {
+      navigate(`/project-details/${project.id}`);
+    } else {
+      alert("Only verified projects are available for investment at this time. Please select QiTaah.");
+    }
+  };
+
   return (
     <section className="p-6 mt-16 bg-gray-50">
       {/* Title */}
@@ -133,6 +152,16 @@ function Projects() {
       <p className="text-center text-gray-600 mb-8">
         Verified projects for profitable investments
       </p>
+
+      {/* Verified Projects Notice */}
+      <div className="max-w-7xl mx-auto mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="flex items-center">
+          <CheckCircle className="text-yellow-600 mr-2" size={20} />
+          <span className="font-medium text-yellow-800">
+            Only verified projects are available for investment. Look for the verified badge.
+          </span>
+        </div>
+      </div>
 
       {/* Filter */}
       <div className="flex justify-center mb-8">
@@ -159,14 +188,24 @@ function Projects() {
             return (
               <div
                 key={p.id}
-                className="bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-105 hover:shadow-2xl transition duration-300 flex flex-col"
+                className={`bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-105 hover:shadow-2xl transition duration-300 flex flex-col ${
+                  !p.verified ? "opacity-70" : ""
+                }`}
               >
                 {/* Banner */}
-                <img
-                  src={p.banner}
-                  alt={p.name}
-                  className="w-full h-48 object-cover"
-                />
+                <div className="relative">
+                  <img
+                    src={p.banner}
+                    alt={p.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  {p.verified && (
+                    <div className="absolute top-2 right-2 bg-green-100 text-green-800 px-2 py-1 rounded-full flex items-center text-xs font-medium">
+                      <CheckCircle size={14} className="mr-1" />
+                      Verified
+                    </div>
+                  )}
+                </div>
 
                 {/* Info */}
                 <div className="p-5 flex flex-col flex-grow">
@@ -200,10 +239,14 @@ function Projects() {
 
                   {/* Button */}
                   <button
-                    onClick={() => navigate(`/project-details/${p.id}`)}
-                    className="mt-auto bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow hover:opacity-90 transition w-full"
+                    onClick={() => handleProjectClick(p)}
+                    className={`mt-auto font-semibold px-4 py-2 rounded-lg shadow transition w-full ${
+                      p.verified
+                        ? "bg-gradient-to-r from-gray-800 to-yellow-600 text-white hover:opacity-90"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                    }`}
                   >
-                    VIEW DETAILS & INVEST
+                    {p.verified ? "VIEW DETAILS & INVEST" : "COMING SOON"}
                   </button>
                 </div>
               </div>

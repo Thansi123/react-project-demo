@@ -3,32 +3,48 @@ import { Link } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-8 mt-12">
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+    <footer className="bg-gray-900 text-gray-300 py-6 border-t border-gray-700">
+      <div className="w-full px-6 flex flex-col md:flex-row items-center justify-between">
         
-        {/* Logo / Brand */}
-        <h2 className="text-lg font-bold text-white">EternalShares</h2>
-
-        {/* Links */}
-        <div className="flex flex-wrap gap-6 text-sm">
-          <Link to="/about" className="hover:text-yellow-500 transition">
-            About
-          </Link>
-          <Link to="/privacy" className="hover:text-yellow-500 transition">
-            Privacy Policy
-          </Link>
-          <Link to="/terms" className="hover:text-yellow-500 transition">
-            Terms of Service
-          </Link>
-          <Link to="/accessibility" className="hover:text-yellow-500 transition">
-            Accessibility
-          </Link>
+        {/* Left: Logo (same alignment as header) */}
+        <div className="flex-shrink-0 pl-8 mb-4 md:mb-0 self-start md:self-center">
+          <h2 className="text-lg font-bold text-white">EternalShares</h2>
         </div>
 
-        {/* Copyright */}
-        <p className="text-xs text-gray-400 text-center md:text-right">
-          © {new Date().getFullYear()} Crowdfunding. All rights reserved.
-        </p>
+        {/* Center: Navigation Links */}
+        <nav className="flex flex-col md:flex-row justify-center gap-4 md:gap-8 text-sm my-2 md:my-0 text-center">
+          <Link
+            to="/about"
+            className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+          >
+            About
+          </Link>
+          <Link
+            to="/privacy"
+            className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            to="/terms"
+            className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+          >
+            Terms of Service
+          </Link>
+          <Link
+            to="/accessibility"
+            className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+          >
+            Accessibility
+          </Link>
+        </nav>
+
+        {/* Right: Copyright */}
+        <div className="flex-shrink-0 pr-8 mt-4 md:mt-0 text-center md:text-right">
+          <p className="text-xs text-gray-400 whitespace-nowrap">
+            © {new Date().getFullYear()} Crowdfunding. All rights reserved.
+          </p>
+        </div>
       </div>
     </footer>
   );

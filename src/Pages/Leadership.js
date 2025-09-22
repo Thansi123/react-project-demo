@@ -24,7 +24,7 @@ function Leadership() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/start-project")}
+            onClick={() => navigate("/login")}
             className="mt-6 bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-6 py-3 rounded-lg shadow-lg hover:opacity-90 transition duration-300"
           >
             Start Project
@@ -45,7 +45,7 @@ function Leadership() {
             </p>
           </div>
           <button
-            onClick={() => navigate("/projects")}
+            onClick={() => navigate("/login")}
             className="mt-6 bg-gradient-to-r from-gray-800 to-yellow-600 text-white px-6 py-3 rounded-lg shadow-lg hover:opacity-90 transition duration-300"
           >
             Invest Now
