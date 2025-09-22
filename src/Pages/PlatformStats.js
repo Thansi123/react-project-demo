@@ -151,11 +151,17 @@ function PlatformStats() {
                 cx="50%"
                 cy="50%"
                 outerRadius={90}
-                label
                 dataKey="value"
+                isAnimationActive={true}
+                animationBegin={0}
+                animationDuration={1500}
+                animationEasing="ease-out"
               >
                 {stageCounts.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />
