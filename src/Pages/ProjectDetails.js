@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { useParams } from "react-router-dom";
 import {
   Bookmark,
@@ -30,7 +29,7 @@ import {
   Lock
 } from "lucide-react";
 import rajilaImg from "../assets/rajila.jpg";
-import bannerImage from "../assets/banner-image.jpg";
+import bannerback from "../assets/banner-back.jpg";
 import qitaahLogo from "../assets/logo.jpg";
 
 const sampleProjects = [
@@ -38,11 +37,11 @@ const sampleProjects = [
     id: 2,
     name: "QiTaah",
     stage: "Seed",
-    category: "Business",
-    raised: 50000,
-    goal: 250000,
+    category: "Technology",
+    raised: 8300,
+    goal: 300000,
     start: 100,
-    banner: bannerImage,
+    banner: bannerback,
     extended: {
       subtitle: "Revolutionizing Real Estate with AI-Driven Innovation",
       description: "QiTaah is an AI-driven platform poised to redefine real estate, starting in the UAE and expanding globally. It harnesses proprietary Spider Web and Spider Mapping technologies—unmatched worldwide—to deliver precise property searches and advanced mapping. The platform introduces tenant and buyer options worldwide, integrated with an escrow system and cryptocurrency for secure, innovative transactions. With extensive automation, QiTaah envisions a future where AI optimizes real estate processes, minimizing costs and enabling seamless global scalability. Future phases will extend to the GCC and 35 additional countries, creating a unified ecosystem for sellers, agents, and developers. This disruption, akin to ChatGPT's transformation of search, positions QiTaah as a pioneer, leveraging technology to foster efficient, secure, and decentralized property markets. Its forward-thinking approach promises to reshape real estate globally, offering scalable solutions and new opportunities through automated, cryptocurrency-supported transactions.",
@@ -87,7 +86,7 @@ const sampleProjects = [
       challenges: [
         "Unimaginable hurdles overcome through sacrifice and hard work in pre-seed and seed stages.",
         "High licensing and API integration costs in Dubai.",
-        "Developing proprietary tech with 27 staff over 7 months.",
+        "Developed proprietary tech with 27 staff over 7 months.",
         "Funding constraints pausing related projects."
       ],
       updates: {
@@ -115,10 +114,12 @@ const sampleProjects = [
       fundraising: {
         target: "300,000 AED",
         willingShare: "10%",
-        return: "Monthly profit sharing, return in 90 days",
+        return: "Monthly profit",
+        investmentReturn: "90 days",
         totalInvestment: "457,000 AED",
         totalShareholders: "2",
-        launched: "No"
+        launched: "No",
+        readyToLaunch: "Yes"
       },
       projection: {
         oneYear: "10 Million AED",
@@ -135,7 +136,7 @@ function ProjectDetails() {
   const { id } = useParams();
   const project = sampleProjects.find((p) => p.id === parseInt(id));
 
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const [saved, setSaved] = useState(false);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [expandedSections, setExpandedSections] = useState({
@@ -152,8 +153,10 @@ function ProjectDetails() {
   }
 
   const percent = Math.min((project.raised / project.goal) * 100, 100);
-  const investPercent = amount > 0 ? ((amount / project.goal) * 100).toFixed(2) : 0;
-  const profitShare = amount > 0 ? (((amount / project.goal) * 90) + 1).toFixed(2) : 1;
+  const numericAmount = amount ? parseFloat(amount) : 0;
+  const investPercent = numericAmount > 0 ? ((numericAmount / project.goal) * 100).toFixed(2) : 0;
+  // Fixed: Profit share should be the same as contribution percentage
+  const profitShare = investPercent;
 
   const handleSave = () => {
     setSaved(!saved);
@@ -185,46 +188,44 @@ function ProjectDetails() {
     }));
   };
 
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    // Allow only numbers and empty string
+    if (value === '' || /^\d+$/.test(value)) {
+      setAmount(value);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-yellow-900 text-gray-100">
-      {/* Enhanced Banner Section with Logo - Adjusted spacing */}
+      {/* Enhanced Banner Section with Logo - Increased top spacing */}
       <div className="relative h-96 w-full overflow-hidden">
         <img
           src={project.banner}
           alt={project.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-yellow-800/80 flex items-center pt-16">
-          <div className="container mx-auto px-6 mt-8">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-yellow-800/80 flex items-center pt-24">
+          <div className="container mx-auto px-6 mt-12">
             <div className="flex flex-col md:flex-row items-start gap-8">
-              {/* Logo Section */}
-              <div className="flex-shrink-0 mt-4">
-                <div className="bg-black/30 backdrop-blur-sm rounded-xl p-4 border border-yellow-500/30 w-32 h-32 flex items-center justify-center">
-                  <img 
-                    src={qitaahLogo} 
-                    alt="QiTaah Logo" 
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-              </div>
               
               {/* Text Content */}
-              <div className="max-w-2xl mt-4">
-                <div className="mb-4">
+              <div className="max-w-2xl mt-8">
+                <div className="mb-6">
                   <span className="px-4 py-1 bg-yellow-500 text-gray-900 text-sm font-bold rounded-full">
                     AI & BLOCKCHAIN POWERED
                   </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
                   QiTaah: Revolution
-                  <span className="block text-yellow-400 mt-2">Real Estate with AI and Blockchain</span>
+                  <span className="block text-yellow-400 mt-4">Real Estate with AI and Blockchain</span>
                 </h1>
-                <p className="text-xl text-yellow-100 mb-8">
+                <p className="text-xl text-yellow-100 mb-10">
                   Transforming property search and transactions through cutting-edge technology
                 </p>
                 
                 {/* Feature Points - Proper Alignment */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white mt-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white mt-8">
                   <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-yellow-500/30">
                     <MapPin size={20} className="mr-2 text-yellow-400 flex-shrink-0" />
                     <span className="text-sm">Starting in UAE, Expanding Globally</span>
@@ -465,20 +466,31 @@ function ProjectDetails() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
-                  alert(`Invested ${amount} AED successfully in ${project.name}!`);
+                  if (!amount || numericAmount < project.start) {
+                    alert(`Please enter an amount greater than or equal to ${project.start} AED`);
+                    return;
+                  }
+                  alert(`Invested ${numericAmount.toLocaleString()} AED successfully in ${project.name}!`);
                 }}
                 className="space-y-4"
               >
                 <div>
                   <label className="block text-gray-300 mb-2 font-medium">Investment Amount (AED)</label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     min={project.start}
                     placeholder={`Min ${project.start} AED`}
                     value={amount}
-                    onChange={(e) => setAmount(Number(e.target.value))}
+                    onChange={handleAmountChange}
                     className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                   />
+                  {amount && numericAmount < project.start && (
+                    <p className="text-red-400 text-sm mt-1">
+                      Minimum investment is {project.start} AED
+                    </p>
+                  )}
                 </div>
                 
                 <div className="bg-gray-700 p-4 rounded-lg border border-yellow-600/30">
@@ -495,9 +507,13 @@ function ProjectDetails() {
                 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-all shadow-md"
+                  className="w-full bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!amount || numericAmount < project.start}
                 >
-                  Confirm Investment
+                  {amount && numericAmount < project.start ? 
+                    `Minimum ${project.start} AED` : 
+                    "Confirm Investment"
+                  }
                 </button>
               </form>
             </div>
@@ -526,12 +542,20 @@ function ProjectDetails() {
                       <span className="font-medium text-white">{project.extended.fundraising.return}</span>
                     </div>
                     <div className="flex justify-between">
+                      <span className="text-gray-300">Investment Return:</span>
+                      <span className="font-medium text-white">{project.extended.fundraising.investmentReturn}</span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="text-gray-300">Total Investment:</span>
                       <span className="font-medium text-white">{project.extended.fundraising.totalInvestment}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Launched:</span>
                       <span className="font-medium text-white">{project.extended.fundraising.launched}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Ready to Launch:</span>
+                      <span className="font-medium text-white">{project.extended.fundraising.readyToLaunch}</span>
                     </div>
                   </div>
                 </div>

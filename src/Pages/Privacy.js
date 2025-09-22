@@ -43,10 +43,10 @@ function Privacy() {
               You may request access, correction, or deletion of your data by
               contacting us at{" "}
               <a
-                href="mailto:support@crowdfunding.ae"
+                href="mailto:support@eternalshares.com"
                 className="text-yellow-600 underline"
               >
-                support@crowdfunding.ae
+                support@eternalshares.com
               </a>
               .
             </p>

@@ -10,7 +10,7 @@ const sampleProjects = [
     name: "InnoStart",
     stage: "Preseed",
     category: "Tech",
-    raised: 5000,
+    raised: 0,
     goal: 50000,
     start: 50,
     banner:
@@ -24,8 +24,8 @@ const sampleProjects = [
     name: "QiTaah",
     stage: "Seed",
     category: "Tech",
-    raised: 50000,
-    goal: 250000,
+    raised: 8300,
+    goal: 300000,
     start: 100,
     banner:
       banner,
@@ -36,7 +36,7 @@ const sampleProjects = [
     name: "AgriNext",
     stage: "Seed",
     category: "Agriculture",
-    raised: 20000,
+    raised: 0,
     goal: 100000,
     start: 150,
     banner:
@@ -50,7 +50,7 @@ const sampleProjects = [
     name: "FinGo",
     stage: "SeriesA",
     category: "Finance",
-    raised: 100000,
+    raised: 0,
     goal: 400000,
     start: 500,
     banner:
@@ -64,7 +64,7 @@ const sampleProjects = [
     name: "EduNova",
     stage: "SeriesB",
     category: "Education",
-    raised: 250000,
+    raised: 0,
     goal: 600000,
     start: 1000,
     banner:
@@ -78,7 +78,7 @@ const sampleProjects = [
     name: "FoodLink",
     stage: "SeriesC",
     category: "Retail",
-    raised: 400000,
+    raised: 0,
     goal: 1000000,
     start: 2000,
     banner:
@@ -92,7 +92,7 @@ const sampleProjects = [
     name: "GreenBuild",
     stage: "Ideation",
     category: "Construction",
-    raised: 2000,
+    raised: 0,
     goal: 120000,
     start: 250,
     banner:
@@ -106,7 +106,7 @@ const sampleProjects = [
     name: "HealthX",
     stage: "IPO",
     category: "Healthcare",
-    raised: 75000,
+    raised: 0,
     goal: 300000,
     start: 500,
     banner:
@@ -118,7 +118,7 @@ const sampleProjects = [
     name: "TravelGo",
     stage: "IPO",
     category: "Travel",
-    raised: 120000,
+    raised: 0,
     goal: 400000,
     start: 1000,
     banner:

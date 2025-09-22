@@ -17,7 +17,9 @@ import {
   Star,
   Clock,
   MapPin,
-  Target
+  Target,
+  Menu,
+  X
 } from "lucide-react";
 
 const InvestorDashboard = () => {
@@ -44,9 +46,9 @@ const InvestorDashboard = () => {
       date: "2024-03-15",
       sharePercentage: 2.5,
       currentValue: 82500,
-      return: 10,
+      return: 2.5,
       status: "Active",
-      category: "Real Estate",
+      category: "Technology",
       stage: "Seed",
       nextUpdate: "2024-06-15",
       meetingLink: "https://meet.google.com/oqd-muyp-ttm",
@@ -65,6 +67,7 @@ const InvestorDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
@@ -80,32 +83,82 @@ const InvestorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Header */}
+      {/* Header - Always visible */}
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="bg-yellow-500 p-2 rounded-lg">
               <Target className="text-white" size={24} />
             </div>
-            <h1 className="text-2xl font-bold text-gray-800">QiTaah Investor Dashboard</h1>
+            <h1 className="text-xl md:text-2xl font-bold text-gray-800">QiTaah Investor Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 hidden md:flex">
               <Bell size={20} />
             </button>
-            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center hidden md:flex">
               <span className="text-white font-semibold text-sm">
                 {investor.name.split(' ').map(n => n[0]).join('')}
               </span>
             </div>
+            {/* Mobile menu button */}
+            <button 
+              className="md:hidden p-2 rounded-lg bg-gray-100"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
           </div>
         </div>
       </header>
 
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg">
+          <div className="p-4 space-y-4">
+            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+              <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">
+                  {investor.name.split(' ').map(n => n[0]).join('')}
+                </span>
+              </div>
+              <div>
+                <div className="font-semibold">{investor.name}</div>
+                <div className="text-sm text-gray-600">{investor.email}</div>
+              </div>
+            </div>
+            
+            <nav className="space-y-2">
+              <button
+                onClick={() => { setActiveTab("overview"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+              >
+                <PieChart size={20} />
+                <span>Overview</span>
+              </button>
+              <button
+                onClick={() => { setActiveTab("investments"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "investments" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+              >
+                <DollarSign size={20} />
+                <span>My Investment</span>
+              </button>
+              <button
+                onClick={() => { setActiveTab("meetings"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "meetings" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+              >
+                <Video size={20} />
+                <span>Meetings</span>
+              </button>
+            </nav>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Sidebar - Hidden on mobile, shown on desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <div className="text-center mb-6">
                 <div className="w-20 h-20 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -158,20 +211,6 @@ const InvestorDashboard = () => {
                   <Video size={20} />
                   <span>Meetings</span>
                 </button>
-                <button
-                  onClick={() => setActiveTab("documents")}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "documents" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
-                >
-                  <Download size={20} />
-                  <span>Documents</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("settings")}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "settings" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
-                >
-                  <Settings size={20} />
-                  <span>Settings</span>
-                </button>
               </nav>
 
               <button className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 mt-6">
@@ -202,6 +241,22 @@ const InvestorDashboard = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
+            {/* Mobile Quick Stats */}
+            <div className="lg:hidden grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="text-lg font-bold text-gray-800">AED {investor.totalInvested.toLocaleString()}</div>
+                <div className="text-xs text-gray-600">Total Invested</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="text-lg font-bold text-blue-800">{investor.totalProjects}</div>
+                <div className="text-xs text-gray-600">Projects</div>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
+                <div className="text-lg font-bold text-green-800">{totalReturn}%</div>
+                <div className="text-xs text-gray-600">Return</div>
+              </div>
+            </div>
+
             {/* Overview Tab */}
             {activeTab === "overview" && (
               <div className="space-y-6">
@@ -213,7 +268,7 @@ const InvestorDashboard = () => {
                       <div className="text-sm text-gray-600">Portfolio Value</div>
                     </div>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">+{totalReturn}%</div>
+                      <div className="text-2xl font-bold text-green-600">{totalReturn}%</div>
                       <div className="text-sm text-gray-600">Total Return</div>
                     </div>
                     <div className="bg-gray-50 p-4 rounded-lg">
@@ -260,8 +315,9 @@ const InvestorDashboard = () => {
                       </div>
                       <div className="text-right">
                         <div className="text-sm text-gray-600">{new Date(qitaahInvestment.date).toLocaleDateString()}</div>
+                        {/* Removed the + sign from the return percentage */}
                         <div className={`text-sm font-semibold ${qitaahInvestment.return >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {qitaahInvestment.return >= 0 ? '+' : ''}{qitaahInvestment.return}%
+                          {qitaahInvestment.return}%
                         </div>
                       </div>
                     </div>
@@ -295,7 +351,7 @@ const InvestorDashboard = () => {
                       </div>
                       <div>
                         <div className="text-sm text-gray-600">Return</div>
-                        <div className="font-semibold text-green-600">+{qitaahInvestment.return}%</div>
+                        <div className="font-semibold text-green-600">{qitaahInvestment.return}%</div>
                       </div>
                       <div>
                         <div className="text-sm text-gray-600">Investment Date</div>
@@ -347,17 +403,17 @@ const InvestorDashboard = () => {
                           Upcoming
                         </span>
                       </div>
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center space-x-2 text-sm text-gray-600">
                           <Video size={16} />
                           <span>Google Meet</span>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                           <a
                             href={qitaahInvestment.meetingLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 text-center"
                           >
                             Join Meeting
                           </a>
@@ -385,25 +441,13 @@ const InvestorDashboard = () => {
                 </div>
               </div>
             )}
-
-            {/* Other tabs can be implemented similarly */}
-            {(activeTab === "documents" || activeTab === "settings") && (
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-semibold mb-6">
-                  {activeTab === "documents" ? "Documents" : "Settings"}
-                </h2>
-                <div className="text-center py-12 text-gray-500">
-                  <p>This section is under development</p>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
       {/* Feedback Modal */}
       {showFeedbackModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4">Meeting Feedback</h3>
             <p className="text-gray-600 mb-4">How was your meeting with {selectedMeeting?.projectName}?</p>
