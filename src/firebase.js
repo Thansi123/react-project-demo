@@ -1,5 +1,6 @@
+// src/firebase.js
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider, TwitterAuthProvider, OAuthProvider } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -9,10 +10,10 @@ const firebaseConfig = {
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "YOUR_STORAGE_BUCKET",
   messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "YOUR_MESSAGING_SENDER_ID",
   appId: process.env.REACT_APP_FIREBASE_APP_ID || "YOUR_APP_ID",
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "YOUR_MEASUREMENT_ID"
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || "YOUR_MEASUREMENT_ID",
 };
 
-// Initialize app
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 // Analytics (optional)
@@ -23,25 +24,9 @@ try {
   console.warn("Analytics not initialized:", err);
 }
 
-// Auth + providers
+// Auth + Google provider only
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
-const facebookProvider = new FacebookAuthProvider();
-const twitterProvider = new TwitterAuthProvider();
 
-// Microsoft, Apple, and Yahoo providers
-const microsoftProvider = new OAuthProvider("microsoft.com");
-const appleProvider = new OAuthProvider("apple.com");
-const yahooProvider = new OAuthProvider("yahoo.com"); // Add this line
-
-// Exports
 export default app;
-export {
-  auth,
-  googleProvider,
-  facebookProvider,
-  twitterProvider,
-  microsoftProvider,
-  appleProvider,
-  yahooProvider // Add this export
-};
+export { auth, googleProvider };

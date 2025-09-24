@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
@@ -30,6 +31,13 @@ import Accessibility from "./Pages/Accessibility";
 
 // Stage Page (dynamic)
 import StagePage from "./Pages/StagePage";
+
+// ProtectedRoute
+import ProtectedRoute from "./Pages/ProtectedRoute";
+
+// 🔒 Disable Shortcuts Component
+import DisableShortcuts from "./Pages/DisableShortcuts";
+
 // ✅ Firebase Import (default export from firebase.js)
 import app from "./firebase";
 
@@ -43,9 +51,11 @@ function App() {
     }
   }, []);
 
-
   return (
     <Router>
+      {/* 🚫 Disable right-click + Ctrl shortcuts globally */}
+      <DisableShortcuts />
+
       <div className="font-sans bg-white text-gray-800">
         <Header />
 
@@ -68,9 +78,26 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/project-details/:id" element={<ProjectDetails />} />
           <Route path="/invest" element={<Invest />} />
-          <Route path="/start-project" element={<StartProject />} />
+
+          {/* ✅ Protected Routes */}
+          <Route
+            path="/start-project"
+            element={
+              <ProtectedRoute>
+                <StartProject />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
           <Route path="/admin-panel" element={<AdminPanel />} />
-          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/behavior-report" element={<BehaviorReport />} />
           <Route path="/login" element={<Login />} />
@@ -81,7 +108,6 @@ function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/accessibility" element={<Accessibility />} />
-          
 
           {/* Stage Routes (dynamic) */}
           <Route path="/stage/:stageId" element={<StagePage />} />
