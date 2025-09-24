@@ -55,7 +55,7 @@ function Footer() {
             <h2 className="text-xl font-bold text-white">EternalShares</h2>
             <p className="mt-2 text-sm text-gray-400">
               Secure your financial future – where every share
-               tells a story of trust and innovation.
+              tells a story of trust and innovation.
             </p>
           </div>
 
@@ -65,15 +65,43 @@ function Footer() {
             <div>
               <h3 className="text-white font-semibold mb-3">COMPANY</h3>
               <ul className="space-y-2">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
-                <li><a href="#">Accessibility</a></li>
-                
+                <li>
+                  <Link
+                    to="/about"
+                    className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/privacy"
+                    className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/terms"
+                    className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/accessibility"
+                    className="hover:text-yellow-500 hover:font-semibold hover:underline transition"
+                  >
+                    Accessibility
+                  </Link>
+                </li>
               </ul>
             </div>
 
-            
+
+
 
             {/* Information */}
             <div>
