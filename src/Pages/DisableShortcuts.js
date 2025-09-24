@@ -19,21 +19,12 @@ function DisableShortcuts() {
         e.preventDefault();
       }
 
-      // Block F12 (DevTools), F11 (Fullscreen), F10, etc.
+      // Block common function keys
       const blockedKeys = ["F12", "F11", "F10", "F9", "F8", "F7"];
       if (blockedKeys.includes(e.key)) {
         e.preventDefault();
       }
     };
-
-    // Extra: try to detect DevTools open
-    const checkDevTools = setInterval(() => {
-      if (window.outerHeight - window.innerHeight > 100 ||
-          window.outerWidth - window.innerWidth > 200) {
-        document.body.innerHTML =
-          "<h1 style='color:red;text-align:center;margin-top:20%'>DevTools is disabled 🚫</h1>";
-      }
-    }, 1000);
 
     // Attach listeners
     document.addEventListener("contextmenu", handleContextMenu);
@@ -46,7 +37,6 @@ function DisableShortcuts() {
 
     // Cleanup
     return () => {
-      clearInterval(checkDevTools);
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("selectstart", handleSelectStart);
       document.removeEventListener("copy", blockEvent);
