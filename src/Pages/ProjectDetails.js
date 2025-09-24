@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { saveInvestment } from "../services/investmentService"; 
 import {
   Bookmark,
   BookmarkCheck,
@@ -147,20 +148,40 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
     e.preventDefault();
     
     if (!mobileNumber || mobileNumber.length < 10) {
-      alert("Please enter a valid mobile number");
+      alert("Please enter a valid mobile number (at least 10 digits)");
       return;
     }
 
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Prepare investment data (only the 3 fields you want)
+      const investmentData = {
+        mobileNumber: mobileNumber,
+        investmentAmount: parseInt(amount),
+        profitShare: parseFloat(profitShare)
+      };
+
+      // Save to Firestore
+      await saveInvestment(investmentData);
+      
       setIsLoading(false);
       setIsSubmitted(true);
       
-      // Simulate sending SMS (in real app, you'd call your backend API)
-      console.log(`SMS sent to ${mobileNumber} for investment confirmation`);
-    }, 2000);
+      console.log('Investment saved successfully to Firestore!');
+      
+      // Close modal after 3 seconds
+      setTimeout(() => {
+        onClose();
+        setIsSubmitted(false);
+        setMobileNumber("");
+      }, 3000);
+      
+    } catch (error) {
+      setIsLoading(false);
+      alert("Error saving investment: " + error.message);
+      console.error('Investment error:', error);
+    }
   };
 
   const handleClose = () => {
@@ -178,7 +199,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
         <div className="flex justify-between items-center p-6 border-b border-yellow-600/30">
           <h3 className="text-xl font-bold text-yellow-400 flex items-center gap-2">
             {isSubmitted ? <CheckCircle className="text-green-500" /> : <DollarSign />}
-            {isSubmitted ? "Meeting Scheduled!" : "Confirm Investment"}
+            {isSubmitted ? "Investment Saved!" : "Confirm Investment"}
           </h3>
           <button
             onClick={handleClose}
@@ -216,7 +237,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
                     className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     required
                   />
-                  <p className="text-gray-400 text-xs mt-1">We'll send meeting details via SMS</p>
+                  <p className="text-gray-400 text-xs mt-1">We'll save your investment details</p>
                 </div>
 
                 <button
@@ -224,7 +245,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
                   disabled={isLoading || !mobileNumber}
                   className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? "Scheduling..." : "Schedule Meeting & Confirm"}
+                  {isLoading ? "Saving to Database..." : "Confirm Investment"}
                 </button>
               </form>
             </>
@@ -233,25 +254,19 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
               <CheckCircle size={64} className="text-green-500 mx-auto mb-4" />
               
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-4">
-                <p className="text-green-400 font-semibold">Meeting Scheduled Successfully!</p>
+                <p className="text-green-400 font-semibold">Investment Saved Successfully!</p>
                 <p className="text-gray-300 text-sm mt-1">
-                  SMS sent to <span className="font-mono">+{mobileNumber}</span>
+                  Details saved for <span className="font-mono">+{mobileNumber}</span>
                 </p>
               </div>
 
               <div className="bg-gray-700/50 rounded-lg p-4 border border-yellow-600/30">
-                <p className="text-gray-300 mb-2">Your Google Meet Details:</p>
-                <a
-                  href={project.extended.meetLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 font-medium"
-                >
-                  Join Google Meet Session <ExternalLink size={16} />
-                </a>
-                <p className="text-gray-400 text-xs mt-2">
-                  Daily at {project.extended.updates.daily}
-                </p>
+                <p className="text-gray-300 mb-2">Your Investment Details:</p>
+                <div className="text-sm text-gray-400 space-y-1">
+                  <p>Amount: <span className="text-yellow-400">{parseInt(amount).toLocaleString()} AED</span></p>
+                  <p>Profit Share: <span className="text-yellow-400">{profitShare}%</span></p>
+                  <p>Project: <span className="text-yellow-400">{project.name}</span></p>
+                </div>
               </div>
 
               <div className="text-left bg-gray-700/30 rounded-lg p-3">
@@ -259,10 +274,9 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
                   <strong>Next Steps:</strong>
                 </p>
                 <ul className="text-gray-400 text-xs mt-1 space-y-1">
-                  <li>• Check your SMS for meeting details</li>
-                  <li>• Join the Google Meet at scheduled time</li>
-                  <li>• Bring your investment documents</li>
-                  <li>• Meeting will take approximately 30 minutes</li>
+                  <li>• Your investment has been recorded</li>
+                  <li>• We'll contact you for further details</li>
+                  <li>• Check your email for confirmation</li>
                 </ul>
               </div>
 
@@ -279,6 +293,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
     </div>
   );
 }
+
 
 function ProjectDetails() {
   const { id } = useParams();

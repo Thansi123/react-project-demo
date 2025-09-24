@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../firebase"; // Adjust path as needed
 import {
   User,
   DollarSign,
@@ -23,16 +25,18 @@ import {
 } from "lucide-react";
 
 const InvestorDashboard = () => {
-  // Sample investor data
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // Investor data - now dynamically populated from Firebase
   const [investor, setInvestor] = useState({
-    name: "Ahmed Al Maktoum",
-    email: "ahmed.almaktoum@example.com",
+    name: "Loading...",
+    email: "Loading...",
     phone: "+971 50 123 4567",
     location: "Dubai, UAE",
-    totalInvested: 75000, // Only QiTaah investment
-    totalProjects: 1, // Only QiTaah project
-    memberSince: "2024-03-15", // Date of QiTaah investment
-    profileCompletion: 85,
+    totalInvested: 0,
+    totalProjects: 0, // Changed from 1 to 0
+    profileCompletion: 0,
     riskAppetite: "Medium",
     preferredSectors: ["Real Estate", "Technology"]
   });
@@ -42,18 +46,18 @@ const InvestorDashboard = () => {
     {
       id: 1,
       projectName: "QiTaah",
-      amount: 75000,
+      amount: 0,
       date: "2024-03-15",
-      sharePercentage: 2.5,
-      currentValue: 82500,
-      return: 2.5,
+      sharePercentage: 0,
+      currentValue: 0,
+      return: 0,
       status: "Active",
       category: "Technology",
       stage: "Seed",
-      nextUpdate: "2024-06-15",
+      
       meetingLink: "https://meet.google.com/oqd-muyp-ttm",
       description: "AI-driven platform redefining real estate with proprietary Spider Web and Spider Mapping technologies",
-      progress: 65 // Funding progress percentage
+      progress: 0
     }
   ]);
 
@@ -69,9 +73,41 @@ const InvestorDashboard = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Fetch user data on component mount
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        // Update investor data with actual user info from Firebase
+        setInvestor(prev => ({
+          ...prev,
+          name: user.displayName || "Investor",
+          email: user.email || "user@example.com"
+        }));
+        setLoading(false);
+      } else {
+        // Redirect to login if not authenticated
+        window.location.href = '/login';
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("user");
+      window.location.href = '/login';
+    } catch (error) {
+      console.error("Logout error:", error);
+      alert("Logout failed: " + error.message);
+    }
+  };
+
   const handleFeedbackSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the feedback to your backend
     alert(`Thank you for your ${feedback.rating}-star feedback for QiTaah!`);
     setFeedback({ rating: 0, comment: "", meetingId: "" });
     setShowFeedbackModal(false);
@@ -79,7 +115,36 @@ const InvestorDashboard = () => {
 
   const totalReturn = investments.reduce((sum, investment) => sum + investment.return, 0);
   const totalCurrentValue = investments.reduce((sum, investment) => sum + investment.currentValue, 0);
-  const qitaahInvestment = investments[0]; // Only QiTaah project
+  const qitaahInvestment = investments[0];
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state if no user found (shouldn't happen due to redirect, but just in case)
+  if (!currentUser) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Unable to load user data</p>
+          <button 
+            onClick={() => window.location.href = '/login'}
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+          >
+            Go to Login
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -90,7 +155,7 @@ const InvestorDashboard = () => {
             <div className="bg-yellow-500 p-2 rounded-lg">
               <Target className="text-white" size={24} />
             </div>
-           
+            <h1 className="text-xl font-semibold">Investor Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
             <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 hidden md:flex">
@@ -151,6 +216,15 @@ const InvestorDashboard = () => {
                 <span>Meetings</span>
               </button>
             </nav>
+
+            {/* Mobile Logout Button */}
+            <button 
+              onClick={handleLogout}
+              className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50"
+            >
+              <LogOut size={20} />
+              <span>Logout</span>
+            </button>
           </div>
         </div>
       )}
@@ -175,10 +249,6 @@ const InvestorDashboard = () => {
               </div>
 
               <div className="space-y-2 mb-6">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Member since</span>
-                  <span className="font-semibold">{new Date(investor.memberSince).toLocaleDateString()}</span>
-                </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Risk appetite</span>
                   <span className="font-semibold">{investor.riskAppetite}</span>
@@ -213,7 +283,10 @@ const InvestorDashboard = () => {
                 </button>
               </nav>
 
-              <button className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 mt-6">
+              <button 
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 mt-6"
+              >
                 <LogOut size={20} />
                 <span>Logout</span>
               </button>
@@ -272,7 +345,7 @@ const InvestorDashboard = () => {
                       <div className="text-sm text-gray-600">Total Return</div>
                     </div>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-2xl font-bold text-gray-800">{investments.length}</div>
+                      <div className="text-2xl font-bold text-gray-800">0</div>
                       <div className="text-sm text-gray-600">Active Investment</div>
                     </div>
                   </div>
@@ -314,8 +387,6 @@ const InvestorDashboard = () => {
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-sm text-gray-600">{new Date(qitaahInvestment.date).toLocaleDateString()}</div>
-                        {/* Removed the + sign from the return percentage */}
                         <div className={`text-sm font-semibold ${qitaahInvestment.return >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {qitaahInvestment.return}%
                         </div>
@@ -354,7 +425,8 @@ const InvestorDashboard = () => {
                         <div className="font-semibold text-green-600">{qitaahInvestment.return}%</div>
                       </div>
                       <div>
-                        
+                        <div className="text-sm text-gray-600">Investor</div>
+                        <div className="font-semibold">{investor.name}</div>
                       </div>
                       <div>
                         <div className="text-sm text-gray-600">Status</div>
@@ -396,7 +468,8 @@ const InvestorDashboard = () => {
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-semibold">{qitaahInvestment.projectName} - Progress Update</h3>
-                          <p className="text-sm text-gray-600">Scheduled for {new Date(qitaahInvestment.nextUpdate).toLocaleDateString()}</p>
+                          
+                          <p className="text-sm text-gray-500">Attendee: {investor.name}</p>
                         </div>
                         <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
                           Upcoming
@@ -450,6 +523,7 @@ const InvestorDashboard = () => {
           <div className="bg-white rounded-xl p-6 w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4">Meeting Feedback</h3>
             <p className="text-gray-600 mb-4">How was your meeting with {selectedMeeting?.projectName}?</p>
+            <p className="text-sm text-gray-500 mb-4">From: {investor.name}</p>
             
             <form onSubmit={handleFeedbackSubmit}>
               <div className="mb-4">

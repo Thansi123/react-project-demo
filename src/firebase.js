@@ -1,6 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // ADD THIS IMPORT
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -24,9 +25,12 @@ try {
   console.warn("Analytics not initialized:", err);
 }
 
-// Auth + Google provider only
+// Auth + Google provider
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
+// Initialize Firestore - ADD THIS
+const db = getFirestore(app);
+
 export default app;
-export { auth, googleProvider };
+export { auth, googleProvider, db }; // EXPORT db
