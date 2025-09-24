@@ -8,7 +8,7 @@ const sampleProjects = [
   {
     id: 1,
     name: "InnoStart",
-    stage: "Preseed",
+    stage: "Pre-Seed",
     category: "Tech",
     raised: 0,
     goal: 50000,
@@ -33,7 +33,7 @@ const sampleProjects = [
   },
   {
     id: 3,
-    name: "AgriNext",
+    name: "Pre-Seed",
     stage: "Seed",
     category: "Agriculture",
     raised: 0,
@@ -48,7 +48,7 @@ const sampleProjects = [
   {
     id: 4,
     name: "FinGo",
-    stage: "SeriesA",
+    stage: "Pre-Seed",
     category: "Finance",
     raised: 0,
     goal: 400000,
@@ -62,7 +62,7 @@ const sampleProjects = [
   {
     id: 5,
     name: "EduNova",
-    stage: "SeriesB",
+    stage: "Pre-Seed",
     category: "Education",
     raised: 0,
     goal: 600000,
@@ -76,7 +76,7 @@ const sampleProjects = [
   {
     id: 6,
     name: "FoodLink",
-    stage: "SeriesC",
+    stage: "Pre-Seed",
     category: "Retail",
     raised: 0,
     goal: 1000000,
@@ -104,7 +104,7 @@ const sampleProjects = [
   {
     id: 8,
     name: "HealthX",
-    stage: "IPO",
+    stage: "Ideation",
     category: "Healthcare",
     raised: 0,
     goal: 300000,
@@ -116,7 +116,7 @@ const sampleProjects = [
   {
     id: 9,
     name: "TravelGo",
-    stage: "IPO",
+    stage: "Ideation",
     category: "Travel",
     raised: 0,
     goal: 400000,

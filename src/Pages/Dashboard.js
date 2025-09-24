@@ -90,7 +90,7 @@ const InvestorDashboard = () => {
             <div className="bg-yellow-500 p-2 rounded-lg">
               <Target className="text-white" size={24} />
             </div>
-            <h1 className="text-xl md:text-2xl font-bold text-gray-800">QiTaah Investor Dashboard</h1>
+           
           </div>
           <div className="flex items-center space-x-4">
             <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 hidden md:flex">
@@ -354,8 +354,7 @@ const InvestorDashboard = () => {
                         <div className="font-semibold text-green-600">{qitaahInvestment.return}%</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Investment Date</div>
-                        <div className="font-semibold">{new Date(qitaahInvestment.date).toLocaleDateString()}</div>
+                        
                       </div>
                       <div>
                         <div className="text-sm text-gray-600">Status</div>

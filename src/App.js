@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -30,8 +30,20 @@ import Accessibility from "./Pages/Accessibility";
 
 // Stage Page (dynamic)
 import StagePage from "./Pages/StagePage";
+// ✅ Firebase Import (default export from firebase.js)
+import app from "./firebase";
 
 function App() {
+  // 🔹 Test Firebase Connection
+  useEffect(() => {
+    if (app) {
+      console.log("✅ Firebase is connected:", app.name); // should log "[DEFAULT]"
+    } else {
+      console.error("❌ Firebase not initialized!");
+    }
+  }, []);
+
+
   return (
     <Router>
       <div className="font-sans bg-white text-gray-800">
@@ -69,6 +81,7 @@ function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/accessibility" element={<Accessibility />} />
+          
 
           {/* Stage Routes (dynamic) */}
           <Route path="/stage/:stageId" element={<StagePage />} />

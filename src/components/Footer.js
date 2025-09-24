@@ -54,8 +54,8 @@ function Footer() {
           <div className="text-center mb-8">
             <h2 className="text-xl font-bold text-white">EternalShares</h2>
             <p className="mt-2 text-sm text-gray-400">
-              Secure your financial future with decentralized transactions –
-              where every share tells a story of trust and innovation.
+              Secure your financial future – where every share
+               tells a story of trust and innovation.
             </p>
           </div>
 
@@ -66,33 +66,14 @@ function Footer() {
               <h3 className="text-white font-semibold mb-3">COMPANY</h3>
               <ul className="space-y-2">
                 <li><a href="#">About</a></li>
-                <li><a href="#">Loan</a></li>
-                <li><a href="#">Security</a></li>
-                <li><a href="#">Deposits & Withdrawals</a></li>
-                <li><a href="#">Analytics</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Accessibility</a></li>
+                
               </ul>
             </div>
 
-            {/* Explore */}
-            <div>
-              <h3 className="text-white font-semibold mb-3">EXPLORE</h3>
-              <ul className="space-y-2">
-                <li><a href="#">Why EternalShares?</a></li>
-                <li><a href="#">How it Works?</a></li>
-                <li><a href="#">Packages</a></li>
-                <li><a href="#">Features</a></li>
-                <li><a href="#">Internal Trading</a></li>
-              </ul>
-            </div>
-
-            {/* Download */}
-            <div>
-              <h3 className="text-white font-semibold mb-3">DOWNLOAD</h3>
-              <ul className="space-y-2">
-                <li><a href="#">App</a></li>
-                <li><a href="#">Wallet</a></li>
-              </ul>
-            </div>
+            
 
             {/* Information */}
             <div>

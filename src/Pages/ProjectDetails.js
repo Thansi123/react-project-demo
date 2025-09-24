@@ -26,11 +26,14 @@ import {
   Zap,
   Brain,
   Database,
-  Lock
+  Lock,
+  X,
+  Phone,
+  CheckCircle
 } from "lucide-react";
 import rajilaImg from "../assets/rajila.jpg";
 import bannerback from "../assets/banner-back.jpg";
-import qitaahLogo from "../assets/logo.jpg";
+import suibImg from "../assets/suib-image.jpg";
 
 const sampleProjects = [
   {
@@ -57,7 +60,7 @@ const sampleProjects = [
       ],
       qna: [
         {
-          q: "How can QiTaah succeed with just 250,000 AED?",
+          q: "How can QiTaah succeed with just 300,000 AED?",
           a: "The project is designed to run with a low operating cost, requiring minimal manpower due to extensive automation."
         },
         {
@@ -90,18 +93,14 @@ const sampleProjects = [
         "Funding constraints pausing related projects."
       ],
       updates: {
-        daily: "Yes: Time: 8:30 PM UAE Time",
+        daily: "Time: 8:30 PM UAE Time",
         weekly: "No"
       },
       shareholders: [
         {
           name: "Rajila Beevi Kaseen Kunju",
-          share: "98%",
+          share: "96%",
           amount: "387,000 AED",
-          dob: "20.05.1972",
-          email: "rajila@eternalshares.com",
-          phone: "+971581677917",
-          account: "Rajila Beevi Kaseenkunju",
           photo: rajilaImg,
         },
         {
@@ -109,6 +108,12 @@ const sampleProjects = [
           share: "2%",
           amount: "70,000 AED",
           photo: "https://img.freepik.com/free-vector/doctor-character-background_1270-84.jpg?w=200&t=st=1712658111~exp=1712658711~hmac=6c6b4e5c7c8e8c6d8e8c6d8e8c6d8e8c6d8e8c6d8e8c6d8e8c6d8e8c6d8e8c6d8",
+        },
+        {
+          name: "Suaib kannithodiyil",
+          share: "2%",
+          amount: "NA",
+          photo: suibImg,
         },
       ],
       fundraising: {
@@ -127,10 +132,153 @@ const sampleProjects = [
         shareValue: "3.5 Million AED"
       },
       website: "https://qitaah.com/",
-      meetLink: "#"
+      meetLink: "https://meet.google.com/oqd-muyp-ttm"
     },
   },
 ];
+
+// Investment Confirmation Modal Component
+function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!mobileNumber || mobileNumber.length < 10) {
+      alert("Please enter a valid mobile number");
+      return;
+    }
+
+    setIsLoading(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+      
+      // Simulate sending SMS (in real app, you'd call your backend API)
+      console.log(`SMS sent to ${mobileNumber} for investment confirmation`);
+    }, 2000);
+  };
+
+  const handleClose = () => {
+    setMobileNumber("");
+    setIsSubmitted(false);
+    onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+      <div className="bg-gray-800 rounded-2xl max-w-md w-full border border-yellow-600/30 shadow-2xl">
+        {/* Header */}
+        <div className="flex justify-between items-center p-6 border-b border-yellow-600/30">
+          <h3 className="text-xl font-bold text-yellow-400 flex items-center gap-2">
+            {isSubmitted ? <CheckCircle className="text-green-500" /> : <DollarSign />}
+            {isSubmitted ? "Meeting Scheduled!" : "Confirm Investment"}
+          </h3>
+          <button
+            onClick={handleClose}
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-6">
+          {!isSubmitted ? (
+            <>
+              <div className="mb-6 text-center">
+                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-4">
+                  <p className="text-2xl font-bold text-yellow-400">{parseInt(amount).toLocaleString()} AED</p>
+                  <p className="text-gray-300 text-sm">Investment Amount</p>
+                </div>
+                <p className="text-gray-300">
+                  You'll receive <span className="text-yellow-400 font-semibold">{profitShare}%</span> profit share in {project.name}
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-gray-300 mb-2 font-medium flex items-center gap-2">
+                    <Phone size={16} />
+                    Mobile Number
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="Enter your mobile number"
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, ''))}
+                    className="w-full border border-gray-600 rounded-lg p-3 bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    required
+                  />
+                  <p className="text-gray-400 text-xs mt-1">We'll send meeting details via SMS</p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading || !mobileNumber}
+                  className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? "Scheduling..." : "Schedule Meeting & Confirm"}
+                </button>
+              </form>
+            </>
+          ) : (
+            <div className="text-center space-y-4">
+              <CheckCircle size={64} className="text-green-500 mx-auto mb-4" />
+              
+              <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-4">
+                <p className="text-green-400 font-semibold">Meeting Scheduled Successfully!</p>
+                <p className="text-gray-300 text-sm mt-1">
+                  SMS sent to <span className="font-mono">+{mobileNumber}</span>
+                </p>
+              </div>
+
+              <div className="bg-gray-700/50 rounded-lg p-4 border border-yellow-600/30">
+                <p className="text-gray-300 mb-2">Your Google Meet Details:</p>
+                <a
+                  href={project.extended.meetLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-yellow-400 hover:text-yellow-300 font-medium"
+                >
+                  Join Google Meet Session <ExternalLink size={16} />
+                </a>
+                <p className="text-gray-400 text-xs mt-2">
+                  Daily at {project.extended.updates.daily}
+                </p>
+              </div>
+
+              <div className="text-left bg-gray-700/30 rounded-lg p-3">
+                <p className="text-gray-300 text-sm">
+                  <strong>Next Steps:</strong>
+                </p>
+                <ul className="text-gray-400 text-xs mt-1 space-y-1">
+                  <li>• Check your SMS for meeting details</li>
+                  <li>• Join the Google Meet at scheduled time</li>
+                  <li>• Bring your investment documents</li>
+                  <li>• Meeting will take approximately 30 minutes</li>
+                </ul>
+              </div>
+
+              <button
+                onClick={handleClose}
+                className="w-full bg-gray-700 text-white font-bold py-3 rounded-lg hover:bg-gray-600 transition-all mt-4"
+              >
+                Close
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -147,6 +295,7 @@ function ProjectDetails() {
     risks: false,
     challenges: false
   });
+  const [showInvestmentModal, setShowInvestmentModal] = useState(false);
 
   if (!project) {
     return <p className="text-center mt-20 text-gray-800">Project not found.</p>;
@@ -155,7 +304,6 @@ function ProjectDetails() {
   const percent = Math.min((project.raised / project.goal) * 100, 100);
   const numericAmount = amount ? parseFloat(amount) : 0;
   const investPercent = numericAmount > 0 ? ((numericAmount / project.goal) * 100).toFixed(2) : 0;
-  // Fixed: Profit share should be the same as contribution percentage
   const profitShare = investPercent;
 
   const handleSave = () => {
@@ -190,14 +338,31 @@ function ProjectDetails() {
 
   const handleAmountChange = (e) => {
     const value = e.target.value;
-    // Allow only numbers and empty string
     if (value === '' || /^\d+$/.test(value)) {
       setAmount(value);
     }
   };
 
+  const handleInvestmentSubmit = (e) => {
+    e.preventDefault();
+    if (!amount || numericAmount < project.start) {
+      alert(`Please enter an amount greater than or equal to ${project.start} AED`);
+      return;
+    }
+    setShowInvestmentModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-yellow-900 text-gray-100">
+      {/* Investment Modal */}
+      <InvestmentModal
+        isOpen={showInvestmentModal}
+        onClose={() => setShowInvestmentModal(false)}
+        project={project}
+        amount={amount}
+        profitShare={profitShare}
+      />
+
       {/* Enhanced Banner Section with Logo - Increased top spacing */}
       <div className="relative h-96 w-full overflow-hidden">
         <img
@@ -212,9 +377,7 @@ function ProjectDetails() {
               {/* Text Content */}
               <div className="max-w-2xl mt-8">
                 <div className="mb-6">
-                  <span className="px-4 py-1 bg-yellow-500 text-gray-900 text-sm font-bold rounded-full">
-                    AI & BLOCKCHAIN POWERED
-                  </span>
+                 
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight">
                   QiTaah: Revolution
@@ -464,14 +627,7 @@ function ProjectDetails() {
                 Invest in {project.name}
               </h2>
               <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!amount || numericAmount < project.start) {
-                    alert(`Please enter an amount greater than or equal to ${project.start} AED`);
-                    return;
-                  }
-                  alert(`Invested ${numericAmount.toLocaleString()} AED successfully in ${project.name}!`);
-                }}
+                onSubmit={handleInvestmentSubmit}
                 className="space-y-4"
               >
                 <div>

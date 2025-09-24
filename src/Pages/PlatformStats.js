@@ -4,15 +4,15 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 // Import the same projects (or move to a shared file later)
 const sampleProjects = [
-  { id: 1, name: "InnoStart", stage: "Preseed", raised: 5000, goal: 50000 },
-  { id: 2, name: "QiTaah", stage: "Seed", raised: 50000, goal: 250000 },
-  { id: 3, name: "AgriNext", stage: "Seed", raised: 20000, goal: 100000 },
-  { id: 4, name: "FinGo", stage: "SeriesA", raised: 100000, goal: 400000 },
-  { id: 5, name: "EduNova", stage: "SeriesB", raised: 250000, goal: 600000 },
-  { id: 6, name: "FoodLink", stage: "SeriesC", raised: 400000, goal: 1000000 },
-  { id: 7, name: "GreenBuild", stage: "Ideation", raised: 2000, goal: 120000 },
-  { id: 8, name: "HealthX", stage: "IPO", raised: 75000, goal: 300000 },
-  { id: 9, name: "TravelGo", stage: "IPO", raised: 120000, goal: 400000 },
+  { id: 1, name: "InnoStart", stage: "Pre-Seed", raised: 0, goal: 50000 },
+  { id: 2, name: "QiTaah", stage: "Seed", raised: 0, goal: 250000 },
+  { id: 3, name: "AgriNext", stage: "Pre-Seed", raised: 0, goal: 100000 },
+  { id: 4, name: "FinGo", stage: "Pre-Seed", raised: 0, goal: 400000 },
+  { id: 5, name: "EduNova", stage: "Pre-Seed", raised: 0, goal: 600000 },
+  { id: 6, name: "FoodLink", stage: "Pre-Seed", raised: 0, goal: 1000000 },
+  { id: 7, name: "GreenBuild", stage: "Ideation", raised: 0, goal: 120000 },
+  { id: 8, name: "HealthX", stage: "Ideation", raised: 0, goal: 300000 },
+  { id: 9, name: "TravelGo", stage: "Ideation", raised: 0, goal: 400000 },
 ];
 
 const COLORS = [
