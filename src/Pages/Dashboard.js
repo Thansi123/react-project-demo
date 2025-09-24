@@ -35,7 +35,7 @@ const InvestorDashboard = () => {
     phone: "+971 50 123 4567",
     location: "Dubai, UAE",
     totalInvested: 0,
-    totalProjects: 0, // Changed from 1 to 0
+    totalProjects: 0,
     profileCompletion: 0,
     riskAppetite: "Medium",
     preferredSectors: ["Real Estate", "Technology"]
@@ -54,9 +54,8 @@ const InvestorDashboard = () => {
       status: "Active",
       category: "Technology",
       stage: "Seed",
-      
       meetingLink: "https://meet.google.com/oqd-muyp-ttm",
-      description: "AI-driven platform redefining real estate with proprietary Spider Web and Spider Mapping technologies",
+      description: "AI-driven platform redefining real estate with proprietary Spider Web and Spider Mapping technologies.",
       progress: 0
     }
   ]);
@@ -129,7 +128,7 @@ const InvestorDashboard = () => {
     );
   }
 
-  // Show error state if no user found (shouldn't happen due to redirect, but just in case)
+  // Show error state if no user found
   if (!currentUser) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -148,30 +147,29 @@ const InvestorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Header - Always visible */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center space-x-4">
+      {/* Header - Mobile Optimized */}
+      <header className="bg-white shadow-sm sticky top-0 z-40">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <div className="flex items-center space-x-3">
             <div className="bg-yellow-500 p-2 rounded-lg">
-              <Target className="text-white" size={24} />
+              <Target className="text-white" size={20} />
             </div>
-            <h1 className="text-xl font-semibold">Investor Dashboard</h1>
+            <h1 className="text-lg font-semibold">Dashboard</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 hidden md:flex">
-              <Bell size={20} />
+          <div className="flex items-center space-x-3">
+            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
+              <Bell size={18} />
             </button>
-            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center hidden md:flex">
-              <span className="text-white font-semibold text-sm">
+            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-xs">
                 {investor.name.split(' ').map(n => n[0]).join('')}
               </span>
             </div>
-            {/* Mobile menu button */}
             <button 
-              className="md:hidden p-2 rounded-lg bg-gray-100"
+              className="p-2 rounded-lg bg-gray-100"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
@@ -179,76 +177,134 @@ const InvestorDashboard = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg">
-          <div className="p-4 space-y-4">
+        <div className="md:hidden bg-white shadow-lg border-t">
+          <div className="p-4 space-y-3">
             <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
               <div className="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center">
                 <span className="text-white font-semibold text-sm">
                   {investor.name.split(' ').map(n => n[0]).join('')}
                 </span>
               </div>
-              <div>
-                <div className="font-semibold">{investor.name}</div>
-                <div className="text-sm text-gray-600">{investor.email}</div>
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-sm truncate">{investor.name}</div>
+                <div className="text-xs text-gray-600 truncate">{investor.email}</div>
               </div>
             </div>
             
-            <nav className="space-y-2">
+            {/* Mobile Navigation Tabs */}
+            <div className="grid grid-cols-3 gap-2 mb-3">
               <button
                 onClick={() => { setActiveTab("overview"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+                className={`flex flex-col items-center p-3 rounded-lg text-center ${
+                  activeTab === "overview" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"
+                }`}
               >
-                <PieChart size={20} />
-                <span>Overview</span>
+                <PieChart size={18} />
+                <span className="text-xs mt-1">Overview</span>
               </button>
               <button
                 onClick={() => { setActiveTab("investments"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "investments" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+                className={`flex flex-col items-center p-3 rounded-lg text-center ${
+                  activeTab === "investments" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"
+                }`}
               >
-                <DollarSign size={20} />
-                <span>My Investment</span>
+                <DollarSign size={18} />
+                <span className="text-xs mt-1">Investment</span>
               </button>
               <button
                 onClick={() => { setActiveTab("meetings"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "meetings" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
+                className={`flex flex-col items-center p-3 rounded-lg text-center ${
+                  activeTab === "meetings" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"
+                }`}
               >
-                <Video size={20} />
-                <span>Meetings</span>
+                <Video size={18} />
+                <span className="text-xs mt-1">Meetings</span>
               </button>
-            </nav>
+            </div>
 
-            {/* Mobile Logout Button */}
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50"
+              className="w-full flex items-center justify-center space-x-2 p-3 rounded-lg text-red-600 hover:bg-red-50 border border-red-200"
             >
-              <LogOut size={20} />
-              <span>Logout</span>
+              <LogOut size={16} />
+              <span className="text-sm font-medium">Logout</span>
             </button>
           </div>
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar - Hidden on mobile, shown on desktop */}
+      <div className="container mx-auto px-3 py-4">
+        {/* Mobile Quick Stats - Always visible */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="bg-white p-3 rounded-lg shadow-sm text-center">
+            <div className="text-base font-bold text-gray-800">AED {investor.totalInvested.toLocaleString()}</div>
+            <div className="text-xs text-gray-600 mt-1">Invested</div>
+          </div>
+          <div className="bg-white p-3 rounded-lg shadow-sm text-center">
+            <div className="text-base font-bold text-blue-800">{investor.totalProjects}</div>
+            <div className="text-xs text-gray-600 mt-1">Projects</div>
+          </div>
+          <div className="bg-white p-3 rounded-lg shadow-sm text-center">
+            <div className="text-base font-bold text-green-800">{totalReturn}%</div>
+            <div className="text-xs text-gray-600 mt-1">Return</div>
+          </div>
+        </div>
+
+        {/* Mobile Tab Navigation */}
+        <div className="md:hidden bg-white rounded-lg shadow-sm mb-6 p-1">
+          <div className="grid grid-cols-3 gap-1">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`py-2 px-1 text-xs font-medium rounded-md transition-colors ${
+                activeTab === "overview" 
+                  ? "bg-yellow-500 text-white" 
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("investments")}
+              className={`py-2 px-1 text-xs font-medium rounded-md transition-colors ${
+                activeTab === "investments" 
+                  ? "bg-yellow-500 text-white" 
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Investment
+            </button>
+            <button
+              onClick={() => setActiveTab("meetings")}
+              className={`py-2 px-1 text-xs font-medium rounded-md transition-colors ${
+                activeTab === "meetings" 
+                  ? "bg-yellow-500 text-white" 
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Meetings
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar - Hidden on mobile */}
           <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold">
+                <div className="w-16 h-16 bg-yellow-500 rounded-full mx-auto mb-3 flex items-center justify-center">
+                  <span className="text-white text-xl font-bold">
                     {investor.name.split(' ').map(n => n[0]).join('')}
                   </span>
                 </div>
-                <h2 className="text-xl font-semibold">{investor.name}</h2>
+                <h2 className="text-lg font-semibold">{investor.name}</h2>
                 <p className="text-gray-600 text-sm">{investor.email}</p>
-                <div className="flex items-center justify-center mt-2 text-sm text-gray-500">
-                  <MapPin size={14} className="mr-1" />
+                <div className="flex items-center justify-center mt-1 text-xs text-gray-500">
+                  <MapPin size={12} className="mr-1" />
                   {investor.location}
                 </div>
               </div>
 
-              <div className="space-y-2 mb-6">
+              <div className="space-y-2 mb-6 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Risk appetite</span>
                   <span className="font-semibold">{investor.riskAppetite}</span>
@@ -259,135 +315,90 @@ const InvestorDashboard = () => {
                 </div>
               </div>
 
-              <nav className="space-y-2">
-                <button
-                  onClick={() => setActiveTab("overview")}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
-                >
-                  <PieChart size={20} />
-                  <span>Overview</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("investments")}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "investments" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
-                >
-                  <DollarSign size={20} />
-                  <span>My Investment</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab("meetings")}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left ${activeTab === "meetings" ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"}`}
-                >
-                  <Video size={20} />
-                  <span>Meetings</span>
-                </button>
+              <nav className="space-y-1">
+                {[
+                  { id: "overview", icon: PieChart, label: "Overview" },
+                  { id: "investments", icon: DollarSign, label: "My Investment" },
+                  { id: "meetings", icon: Video, label: "Meetings" }
+                ].map(({ id, icon: Icon, label }) => (
+                  <button
+                    key={id}
+                    onClick={() => setActiveTab(id)}
+                    className={`w-full flex items-center space-x-2 p-2 rounded-lg text-left text-sm ${
+                      activeTab === id ? "bg-yellow-50 text-yellow-700" : "hover:bg-gray-100"
+                    }`}
+                  >
+                    <Icon size={16} />
+                    <span>{label}</span>
+                  </button>
+                ))}
               </nav>
 
               <button 
                 onClick={handleLogout}
-                className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 mt-6"
+                className="w-full flex items-center space-x-2 p-2 rounded-lg text-left text-sm text-red-600 hover:bg-red-50 mt-4"
               >
-                <LogOut size={20} />
+                <LogOut size={16} />
                 <span>Logout</span>
               </button>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-              <h3 className="font-semibold mb-4">Quick Stats</h3>
-              <div className="space-y-3">
-                <div className="bg-yellow-50 p-3 rounded-lg">
-                  <div className="text-yellow-800 font-semibold">AED {investor.totalInvested.toLocaleString()}</div>
-                  <div className="text-sm text-yellow-600">Total Invested</div>
-                </div>
-                <div className="bg-blue-50 p-3 rounded-lg">
-                  <div className="text-blue-800 font-semibold">{investor.totalProjects} Project</div>
-                  <div className="text-sm text-blue-600">Active Investment</div>
-                </div>
-                <div className="bg-green-50 p-3 rounded-lg">
-                  <div className="text-green-800 font-semibold">{totalReturn}%</div>
-                  <div className="text-sm text-green-600">Current Return</div>
-                </div>
-              </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Mobile Quick Stats */}
-            <div className="lg:hidden grid grid-cols-3 gap-4 mb-6">
-              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-                <div className="text-lg font-bold text-gray-800">AED {investor.totalInvested.toLocaleString()}</div>
-                <div className="text-xs text-gray-600">Total Invested</div>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-                <div className="text-lg font-bold text-blue-800">{investor.totalProjects}</div>
-                <div className="text-xs text-gray-600">Projects</div>
-              </div>
-              <div className="bg-white p-4 rounded-lg shadow-sm text-center">
-                <div className="text-lg font-bold text-green-800">{totalReturn}%</div>
-                <div className="text-xs text-gray-600">Return</div>
-              </div>
-            </div>
-
+          <div className="lg:col-span-3 space-y-4">
             {/* Overview Tab */}
             {activeTab === "overview" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-xl font-semibold mb-6">Portfolio Overview</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-2xl font-bold text-gray-800">AED {totalCurrentValue.toLocaleString()}</div>
-                      <div className="text-sm text-gray-600">Portfolio Value</div>
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl shadow-sm p-4">
+                  <h2 className="text-lg font-semibold mb-4">Portfolio Overview</h2>
+                  <div className="grid grid-cols-1 gap-3 mb-4">
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="text-xl font-bold text-gray-800">AED {totalCurrentValue.toLocaleString()}</div>
+                      <div className="text-xs text-gray-600">Portfolio Value</div>
                     </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">{totalReturn}%</div>
-                      <div className="text-sm text-gray-600">Total Return</div>
-                    </div>
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <div className="text-2xl font-bold text-gray-800">0</div>
-                      <div className="text-sm text-gray-600">Active Investment</div>
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="text-xl font-bold text-green-600">{totalReturn}%</div>
+                      <div className="text-xs text-gray-600">Total Return</div>
                     </div>
                   </div>
 
-                  <div className="mb-6">
-                    <h3 className="font-semibold mb-4">Project Progress</h3>
-                    <div className="space-y-4">
+                  <div className="mb-4">
+                    <div className="space-y-3">
                       <div>
-                        <div className="flex justify-between mb-2">
-                          <span className="text-sm font-medium">Funding Progress</span>
-                          <span className="text-sm font-semibold">{qitaahInvestment.progress}%</span>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-xs font-medium">Funding Progress</span>
+                          <span className="text-xs font-semibold">{qitaahInvestment.progress}%</span>
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 rounded-full h-1.5">
                           <div
-                            className="bg-yellow-500 h-2 rounded-full"
+                            className="bg-yellow-500 h-1.5 rounded-full"
                             style={{ width: `${qitaahInvestment.progress}%` }}
                           ></div>
                         </div>
                       </div>
                       <div>
-                        <div className="text-sm font-medium mb-2">Project Description</div>
-                        <p className="text-sm text-gray-600">{qitaahInvestment.description}</p>
+                        <div className="text-xs font-medium mb-1">Project Description</div>
+                        <p className="text-xs text-gray-600 leading-relaxed">{qitaahInvestment.description}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-xl font-semibold mb-6">Recent Activity</h2>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                          <DollarSign className="text-yellow-600" size={20} />
+                <div className="bg-white rounded-xl shadow-sm p-4">
+                  <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                          <DollarSign className="text-yellow-600" size={16} />
                         </div>
                         <div>
-                          <div className="font-semibold">{qitaahInvestment.projectName}</div>
-                          <div className="text-sm text-gray-600">Invested AED {qitaahInvestment.amount.toLocaleString()}</div>
+                          <div className="font-semibold text-sm">{qitaahInvestment.projectName}</div>
+                          <div className="text-xs text-gray-600">AED {qitaahInvestment.amount.toLocaleString()}</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className={`text-sm font-semibold ${qitaahInvestment.return >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <div className={`text-xs font-semibold ${qitaahInvestment.return >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {qitaahInvestment.return}%
                         </div>
                       </div>
@@ -399,58 +410,48 @@ const InvestorDashboard = () => {
 
             {/* Investments Tab */}
             {activeTab === "investments" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <div className="flex justify-between items-center mb-6">
-                    <h2 className="text-xl font-semibold">My Investment</h2>
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl shadow-sm p-4">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-lg font-semibold">My Investment</h2>
                   </div>
 
-                  <div className="bg-yellow-50 rounded-lg p-6 mb-6">
-                    <h3 className="font-semibold text-lg mb-4">QiTaah Investment Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-yellow-50 rounded-lg p-4 mb-4">
+                    <h3 className="font-semibold text-base mb-3">QiTaah Investment</h3>
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <div className="text-sm text-gray-600">Investment Amount</div>
-                        <div className="font-semibold">AED {qitaahInvestment.amount.toLocaleString()}</div>
+                        <div className="text-xs text-gray-600">Amount</div>
+                        <div className="font-semibold text-sm">AED {qitaahInvestment.amount.toLocaleString()}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Share Percentage</div>
-                        <div className="font-semibold">{qitaahInvestment.sharePercentage}%</div>
+                        <div className="text-xs text-gray-600">Share %</div>
+                        <div className="font-semibold text-sm">{qitaahInvestment.sharePercentage}%</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Current Value</div>
-                        <div className="font-semibold">AED {qitaahInvestment.currentValue.toLocaleString()}</div>
+                        <div className="text-xs text-gray-600">Current Value</div>
+                        <div className="font-semibold text-sm">AED {qitaahInvestment.currentValue.toLocaleString()}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Return</div>
-                        <div className="font-semibold text-green-600">{qitaahInvestment.return}%</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-600">Investor</div>
-                        <div className="font-semibold">{investor.name}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-600">Status</div>
-                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                          {qitaahInvestment.status}
-                        </span>
+                        <div className="text-xs text-gray-600">Return</div>
+                        <div className="font-semibold text-green-600 text-sm">{qitaahInvestment.return}%</div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 rounded-lg p-6">
-                    <h3 className="font-semibold text-lg mb-4">Project Information</h3>
-                    <div className="space-y-3">
+                  <div className="bg-gray-50 rounded-lg p-4">
+                    <h3 className="font-semibold text-base mb-3">Project Info</h3>
+                    <div className="space-y-2 text-sm">
                       <div>
-                        <div className="text-sm text-gray-600">Category</div>
+                        <div className="text-xs text-gray-600">Category</div>
                         <div className="font-semibold">{qitaahInvestment.category}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Stage</div>
+                        <div className="text-xs text-gray-600">Stage</div>
                         <div className="font-semibold">{qitaahInvestment.stage}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-600">Description</div>
-                        <div className="text-sm">{qitaahInvestment.description}</div>
+                        <div className="text-xs text-gray-600">Description</div>
+                        <div className="text-xs">{qitaahInvestment.description}</div>
                       </div>
                     </div>
                   </div>
@@ -460,32 +461,31 @@ const InvestorDashboard = () => {
 
             {/* Meetings Tab */}
             {activeTab === "meetings" && (
-              <div className="space-y-6">
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-xl font-semibold mb-6">Scheduled Meetings</h2>
-                  <div className="space-y-4">
-                    <div className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <h3 className="font-semibold">{qitaahInvestment.projectName} - Progress Update</h3>
-                          
-                          <p className="text-sm text-gray-500">Attendee: {investor.name}</p>
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl shadow-sm p-4">
+                  <h2 className="text-lg font-semibold mb-4">Scheduled Meetings</h2>
+                  <div className="space-y-3">
+                    <div className="border border-gray-200 rounded-lg p-3">
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-sm truncate">{qitaahInvestment.projectName} - Update</h3>
+                          <p className="text-xs text-gray-500 mt-1">Attendee: {investor.name}</p>
                         </div>
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full whitespace-nowrap ml-2">
                           Upcoming
                         </span>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
-                          <Video size={16} />
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center space-x-1 text-xs text-gray-600">
+                          <Video size={12} />
                           <span>Google Meet</span>
                         </div>
-                        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <div className="flex flex-col gap-2">
                           <a
                             href={qitaahInvestment.meetingLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700 text-center"
+                            className="px-3 py-2 bg-blue-600 text-white rounded text-xs text-center hover:bg-blue-700"
                           >
                             Join Meeting
                           </a>
@@ -494,7 +494,7 @@ const InvestorDashboard = () => {
                               setSelectedMeeting(qitaahInvestment);
                               setShowFeedbackModal(true);
                             }}
-                            className="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
+                            className="px-3 py-2 border border-gray-300 rounded text-xs hover:bg-gray-50"
                           >
                             Give Feedback
                           </button>
@@ -504,11 +504,11 @@ const InvestorDashboard = () => {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-xl font-semibold mb-6">Meeting History</h2>
-                  <div className="text-center py-8 text-gray-500">
-                    <Video size={48} className="mx-auto mb-4 text-gray-300" />
-                    <p>No past meetings yet</p>
+                <div className="bg-white rounded-xl shadow-sm p-4">
+                  <h2 className="text-lg font-semibold mb-4">Meeting History</h2>
+                  <div className="text-center py-6 text-gray-500">
+                    <Video size={32} className="mx-auto mb-2 text-gray-300" />
+                    <p className="text-sm">No past meetings yet</p>
                   </div>
                 </div>
               </div>
@@ -517,24 +517,24 @@ const InvestorDashboard = () => {
         </div>
       </div>
 
-      {/* Feedback Modal */}
+      {/* Feedback Modal - Mobile Optimized */}
       {showFeedbackModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4">Meeting Feedback</h3>
-            <p className="text-gray-600 mb-4">How was your meeting with {selectedMeeting?.projectName}?</p>
-            <p className="text-sm text-gray-500 mb-4">From: {investor.name}</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3">
+          <div className="bg-white rounded-xl p-4 w-full max-w-sm">
+            <h3 className="text-lg font-semibold mb-3">Meeting Feedback</h3>
+            <p className="text-gray-600 text-sm mb-3">How was your meeting with {selectedMeeting?.projectName}?</p>
+            <p className="text-xs text-gray-500 mb-4">From: {investor.name}</p>
             
             <form onSubmit={handleFeedbackSubmit}>
-              <div className="mb-4">
+              <div className="mb-3">
                 <label className="block text-sm font-medium mb-2">Rating</label>
-                <div className="flex space-x-1">
+                <div className="flex justify-center space-x-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setFeedback({ ...feedback, rating: star })}
-                      className="text-2xl focus:outline-none"
+                      className="text-xl focus:outline-none"
                     >
                       {star <= feedback.rating ? '★' : '☆'}
                     </button>
@@ -547,25 +547,25 @@ const InvestorDashboard = () => {
                 <textarea
                   value={feedback.comment}
                   onChange={(e) => setFeedback({ ...feedback, comment: e.target.value })}
-                  rows={4}
-                  className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  placeholder="Share your thoughts about the meeting..."
+                  rows={3}
+                  className="w-full border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-1 focus:ring-yellow-500"
+                  placeholder="Share your thoughts..."
                 />
               </div>
 
-              <div className="flex space-x-3">
+              <div className="flex space-x-2">
                 <button
                   type="button"
                   onClick={() => setShowFeedbackModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+                  className="flex-1 px-3 py-2 bg-yellow-600 text-white rounded-lg text-sm hover:bg-yellow-700"
                 >
-                  Submit Feedback
+                  Submit
                 </button>
               </div>
             </form>
