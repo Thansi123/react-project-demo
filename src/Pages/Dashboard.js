@@ -70,7 +70,6 @@ const InvestorDashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [selectedMeeting, setSelectedMeeting] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -147,18 +146,10 @@ const InvestorDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* Header - Always visible */}
-      <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
+      {/* Header - Only visible on desktop */}
+      <header className="hidden lg:block bg-white shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            {/* Mobile menu button on LEFT side */}
-            <button 
-              className="lg:hidden p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
-            </button>
-            
             <div className="bg-yellow-500 p-2 rounded-lg">
               <Target className="text-white" size={20} />
             </div>
@@ -166,10 +157,10 @@ const InvestorDashboard = () => {
           </div>
           
           <div className="flex items-center space-x-3">
-            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 hidden md:flex">
+            <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
               <Bell size={18} />
             </button>
-            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center hidden md:flex">
+            <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
               <span className="text-white font-semibold text-xs">
                 {investor.name.split(' ').map(n => n[0]).join('')}
               </span>
@@ -178,106 +169,11 @@ const InvestorDashboard = () => {
         </div>
       </header>
 
-      {/* Mobile Sidebar - Appears from LEFT side like desktop */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50">
-          {/* Overlay */}
-          <div 
-            className="absolute inset-0 bg-black bg-opacity-50"
-            onClick={() => setMobileMenuOpen(false)}
-          ></div>
-          
-          {/* Sidebar from left */}
-          <div className="absolute left-0 top-0 h-full w-80 bg-white shadow-lg animate-in slide-in-from-left duration-300 overflow-y-auto">
-            <div className="p-6">
-              {/* User Profile */}
-              <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-white text-2xl font-bold">
-                    {investor.name.split(' ').map(n => n[0]).join('')}
-                  </span>
-                </div>
-                <h2 className="text-lg font-semibold truncate">{investor.name}</h2>
-                <p className="text-gray-600 text-sm truncate">{investor.email}</p>
-                <div className="flex items-center justify-center mt-2 text-sm text-gray-500">
-                  <MapPin size={14} className="mr-1" />
-                  {investor.location}
-                </div>
-              </div>
-
-              {/* User Stats */}
-              <div className="space-y-3 mb-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 text-sm">Risk appetite</span>
-                  <span className="font-semibold text-sm bg-gray-100 px-2 py-1 rounded">{investor.riskAppetite}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 text-sm">Profile completion</span>
-                  <span className="font-semibold text-sm">{investor.profileCompletion}%</span>
-                </div>
-              </div>
-
-              {/* Navigation */}
-              <nav className="space-y-2">
-                <button
-                  onClick={() => { setActiveTab("overview"); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
-                >
-                  <PieChart size={18} />
-                  <span className="font-medium">Overview</span>
-                </button>
-                <button
-                  onClick={() => { setActiveTab("investments"); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "investments" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
-                >
-                  <DollarSign size={18} />
-                  <span className="font-medium">My Investment</span>
-                </button>
-                <button
-                  onClick={() => { setActiveTab("meetings"); setMobileMenuOpen(false); }}
-                  className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "meetings" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
-                >
-                  <Video size={18} />
-                  <span className="font-medium">Meetings</span>
-                </button>
-              </nav>
-
-              {/* Quick Stats in Mobile Sidebar */}
-              <div className="mt-6">
-                <h3 className="font-semibold mb-4 text-gray-800">Quick Stats</h3>
-                <div className="space-y-3">
-                  <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                    <div className="text-yellow-800 font-semibold text-lg">AED {investor.totalInvested.toLocaleString()}</div>
-                    <div className="text-sm text-yellow-600">Total Invested</div>
-                  </div>
-                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <div className="text-blue-800 font-semibold text-lg">{investor.totalProjects} Project</div>
-                    <div className="text-sm text-blue-600">Active Investment</div>
-                  </div>
-                  <div className="bg-green-50 p-3 rounded-lg border border-green-100">
-                    <div className="text-green-800 font-semibold text-lg">{totalReturn}%</div>
-                    <div className="text-sm text-green-600">Current Return</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Logout Button */}
-              <button 
-                onClick={handleLogout}
-                className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 transition-colors mt-6 border border-transparent hover:border-red-200"
-              >
-                <LogOut size={18} />
-                <span className="font-medium">Logout</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="container mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Sidebar - Hidden on mobile, shown on desktop */}
-          <div className="hidden lg:block lg:col-span-1 space-y-6">
+          {/* Sidebar - Always visible on both mobile and desktop */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Profile Section - Always visible on mobile */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <div className="text-center mb-6">
                 <div className="w-20 h-20 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
@@ -304,6 +200,7 @@ const InvestorDashboard = () => {
                 </div>
               </div>
 
+              {/* Navigation - Always visible on mobile */}
               <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab("overview")}
@@ -337,8 +234,8 @@ const InvestorDashboard = () => {
               </button>
             </div>
 
-            {/* Quick Stats */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            {/* Quick Stats - Hidden on mobile, shown on desktop */}
+            <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-100 p-6">
               <h3 className="font-semibold mb-4 text-gray-800">Quick Stats</h3>
               <div className="space-y-3">
                 <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
@@ -359,23 +256,21 @@ const InvestorDashboard = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            {/* Mobile Quick Stats - Only show if sidebar is closed */}
-            {!mobileMenuOpen && (
-              <div className="lg:hidden grid grid-cols-3 gap-3 mb-6">
-                <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
-                  <div className="text-base font-bold text-gray-800">AED {investor.totalInvested.toLocaleString()}</div>
-                  <div className="text-xs text-gray-600 mt-1">Total Invested</div>
-                </div>
-                <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
-                  <div className="text-base font-bold text-blue-800">{investor.totalProjects}</div>
-                  <div className="text-xs text-gray-600 mt-1">Projects</div>
-                </div>
-                <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
-                  <div className="text-base font-bold text-green-800">{totalReturn}%</div>
-                  <div className="text-xs text-gray-600 mt-1">Return</div>
-                </div>
+            {/* Mobile Quick Stats - Only show on mobile */}
+            <div className="lg:hidden grid grid-cols-3 gap-3 mb-6">
+              <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+                <div className="text-base font-bold text-gray-800">AED {investor.totalInvested.toLocaleString()}</div>
+                <div className="text-xs text-gray-600 mt-1">Total Invested</div>
               </div>
-            )}
+              <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+                <div className="text-base font-bold text-blue-800">{investor.totalProjects}</div>
+                <div className="text-xs text-gray-600 mt-1">Projects</div>
+              </div>
+              <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 text-center">
+                <div className="text-base font-bold text-green-800">{totalReturn}%</div>
+                <div className="text-xs text-gray-600 mt-1">Return</div>
+              </div>
+            </div>
 
             {/* Overview Tab */}
             {activeTab === "overview" && (
