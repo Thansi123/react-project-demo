@@ -33,7 +33,7 @@ const sampleProjects = [
   },
   {
     id: 3,
-    name: "Pre-Seed",
+    name: "StartNew",
     stage: "Seed",
     category: "Agriculture",
     raised: 0,
