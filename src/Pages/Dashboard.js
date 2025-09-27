@@ -201,7 +201,7 @@ const InvestorDashboard = () => {
               </div>
 
               {/* Navigation - Always visible on mobile */}
-              <nav className="space-y-2">
+              <nav className="space-y-2 lg:mt-0 mt-4">
                 <button
                   onClick={() => setActiveTab("overview")}
                   className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
