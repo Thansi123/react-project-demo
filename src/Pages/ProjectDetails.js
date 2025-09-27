@@ -395,7 +395,7 @@ function ProjectDetails() {
 
                 </div>
                 {/* Add mt-16 or pt-16 for mobile view to create more space */}
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight mt-16 md:mt-8">
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight mt-20 md:mt-12">
                   QiTaah: Revolution
                   <span className="block text-yellow-400 mt-4">Real Estate with AI and Blockchain</span>
                 </h1>
