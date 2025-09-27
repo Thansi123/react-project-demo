@@ -174,8 +174,8 @@ const InvestorDashboard = () => {
           {/* Sidebar - Always visible on both mobile and desktop */}
           <div className="lg:col-span-1 space-y-6">
             {/* Profile Section - Always visible on mobile */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <div className="text-center mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6 lg:mt-0"> {/* Added mt-6 for mobile */}
+              <div className="text-center mb-6 pt-4 lg:pt-0"> {/* Added pt-4 for mobile */}
                 <div className="w-20 h-20 bg-yellow-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-white text-2xl font-bold">
                     {investor.name.split(' ').map(n => n[0]).join('')}
@@ -201,7 +201,7 @@ const InvestorDashboard = () => {
               </div>
 
               {/* Navigation - Always visible on mobile */}
-              <nav className="space-y-2 lg:mt-0 mt-12"> {/* Changed from mt-4 to mt-12 */}
+              <nav className="space-y-2">
                 <button
                   onClick={() => setActiveTab("overview")}
                   className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
