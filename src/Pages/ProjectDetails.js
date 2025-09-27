@@ -394,17 +394,25 @@ function ProjectDetails() {
                 <div className="mb-6">
 
                 </div>
-                {/* Add mt-16 or pt-16 for mobile view to create more space */}
-                <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight mt-20 md:mt-12">
-                  QiTaah: Revolution
-                  <span className="block text-yellow-400 mt-4">Real Estate with AI and Blockchain</span>
-                </h1>
-                <p className="text-xl text-yellow-100 mb-10">
-                  Transforming property search and transactions through cutting-edge technology
-                </p>
+                {/* Title with proper spacing */}
+                <div className="mb-6 mt-16 md:mt-12">
+                  <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                    QiTaah: Revolution
+                  </h1>
+                  <h2 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-6">
+                    Real Estate with AI and Blockchain
+                  </h2>
+                </div>
+
+                {/* Description with proper alignment */}
+                <div className="mb-10">
+                  <p className="text-xl text-yellow-100 leading-relaxed max-w-3xl">
+                    Transforming property search and transactions through cutting-edge technology
+                  </p>
+                </div>
 
                 {/* Feature Points - Proper Alignment */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
                   <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-yellow-500/30">
                     <MapPin size={20} className="mr-2 text-yellow-400 flex-shrink-0" />
                     <span className="text-sm">Starting in UAE, Expanding Globally</span>
@@ -423,7 +431,6 @@ function ProjectDetails() {
           </div>
         </div>
       </div>
-
       <div className="container mx-auto px-4 py-8 max-w-6xl -mt-16 relative z-10">
         {/* Progress Bar */}
         <div className="bg-gray-800 rounded-xl p-6 mb-8 shadow-lg border border-yellow-600/30">
