@@ -133,7 +133,7 @@ const InvestorDashboard = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 mb-4">Unable to load user data</p>
-          <button 
+          <button
             onClick={() => window.location.href = '/login'}
             className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           >
@@ -155,7 +155,7 @@ const InvestorDashboard = () => {
             </div>
             <h1 className="text-lg font-semibold">Investor Dashboard</h1>
           </div>
-          
+
           <div className="flex items-center space-x-3">
             <button className="p-2 rounded-full bg-gray-100 hover:bg-gray-200">
               <Bell size={18} />
@@ -201,7 +201,7 @@ const InvestorDashboard = () => {
               </div>
 
               {/* Navigation - Always visible on mobile */}
-              <nav className="space-y-2 lg:mt-0 mt-4">
+              <nav className="space-y-2 lg:mt-0 mt-12"> {/* Changed from mt-4 to mt-12 */}
                 <button
                   onClick={() => setActiveTab("overview")}
                   className={`w-full flex items-center space-x-3 p-3 rounded-lg text-left transition-colors ${activeTab === "overview" ? "bg-yellow-50 text-yellow-700 border border-yellow-200" : "hover:bg-gray-50"}`}
@@ -225,7 +225,7 @@ const InvestorDashboard = () => {
                 </button>
               </nav>
 
-              <button 
+              <button
                 onClick={handleLogout}
                 className="w-full flex items-center space-x-3 p-3 rounded-lg text-left text-red-600 hover:bg-red-50 transition-colors mt-6 border border-transparent hover:border-red-200"
               >
@@ -464,7 +464,7 @@ const InvestorDashboard = () => {
             <h3 className="text-lg font-semibold mb-3 text-gray-800">Meeting Feedback</h3>
             <p className="text-gray-600 text-sm mb-3">How was your meeting with {selectedMeeting?.projectName}?</p>
             <p className="text-xs text-gray-500 mb-4">From: {investor.name}</p>
-            
+
             <form onSubmit={handleFeedbackSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2 text-gray-700">Rating</label>
