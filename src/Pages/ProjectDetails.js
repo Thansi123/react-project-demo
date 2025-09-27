@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { saveInvestment } from "../services/investmentService"; 
+import { saveInvestment } from "../services/investmentService";
 import {
   Bookmark,
   BookmarkCheck,
@@ -146,14 +146,14 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!mobileNumber || mobileNumber.length < 10) {
       alert("Please enter a valid mobile number (at least 10 digits)");
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       // Prepare investment data (only the 3 fields you want)
       const investmentData = {
@@ -164,19 +164,19 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
 
       // Save to Firestore
       await saveInvestment(investmentData);
-      
+
       setIsLoading(false);
       setIsSubmitted(true);
-      
+
       console.log('Investment saved successfully to Firestore!');
-      
+
       // Close modal after 3 seconds
       setTimeout(() => {
         onClose();
         setIsSubmitted(false);
         setMobileNumber("");
       }, 3000);
-      
+
     } catch (error) {
       setIsLoading(false);
       alert("Error saving investment: " + error.message);
@@ -252,7 +252,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
           ) : (
             <div className="text-center space-y-4">
               <CheckCircle size={64} className="text-green-500 mx-auto mb-4" />
-              
+
               <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-4">
                 <p className="text-green-400 font-semibold">Investment Saved Successfully!</p>
                 <p className="text-gray-300 text-sm mt-1">
@@ -293,6 +293,7 @@ function InvestmentModal({ isOpen, onClose, project, amount, profitShare }) {
     </div>
   );
 }
+
 
 function ProjectDetails() {
   const { id } = useParams();
@@ -377,43 +378,44 @@ function ProjectDetails() {
         profitShare={profitShare}
       />
 
-      {/* Enhanced Banner Section with Logo - Fixed spacing for mobile */}
+      {/* Enhanced Banner Section with Logo - Increased top spacing */}
       <div className="relative h-96 w-full overflow-hidden">
         <img
           src={project.banner}
           alt={project.name}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-yellow-800/80 flex items-center pt-16 md:pt-24">
-          <div className="container mx-auto px-6 mt-8 md:mt-12">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-900/90 to-yellow-800/80 flex items-center pt-24">
+          <div className="container mx-auto px-6 mt-12">
             <div className="flex flex-col md:flex-row items-start gap-8">
-              
+
               {/* Text Content */}
-              <div className="max-w-2xl mt-4 md:mt-8">
+              <div className="max-w-2xl mt-8">
                 <div className="mb-6">
-                 
+
                 </div>
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 md:mb-8 leading-tight">
+                {/* Add mt-16 or pt-16 for mobile view to create more space */}
+                <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 leading-tight mt-16 md:mt-8">
                   QiTaah: Revolution
-                  <span className="block text-yellow-400 mt-2 md:mt-4">Real Estate with AI and Blockchain</span>
+                  <span className="block text-yellow-400 mt-4">Real Estate with AI and Blockchain</span>
                 </h1>
-                <p className="text-lg md:text-xl text-yellow-100 mb-6 md:mb-10">
+                <p className="text-xl text-yellow-100 mb-10">
                   Transforming property search and transactions through cutting-edge technology
                 </p>
-                
+
                 {/* Feature Points - Proper Alignment */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 text-white mt-6 md:mt-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-white mt-8">
                   <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-yellow-500/30">
-                    <MapPin size={18} className="mr-2 text-yellow-400 flex-shrink-0" />
-                    <span className="text-xs md:text-sm">Starting in UAE, Expanding Globally</span>
+                    <MapPin size={20} className="mr-2 text-yellow-400 flex-shrink-0" />
+                    <span className="text-sm">Starting in UAE, Expanding Globally</span>
                   </div>
                   <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-yellow-500/30">
-                    <Zap size={18} className="mr-2 text-yellow-400 flex-shrink-0" />
-                    <span className="text-xs md:text-sm">AI-Powered Platform</span>
+                    <Zap size={20} className="mr-2 text-yellow-400 flex-shrink-0" />
+                    <span className="text-sm">AI-Powered Platform</span>
                   </div>
                   <div className="flex items-center bg-black/30 backdrop-blur-sm rounded-lg p-3 border border-yellow-500/30">
-                    <Lock size={18} className="mr-2 text-yellow-400 flex-shrink-0" />
-                    <span className="text-xs md:text-sm">Blockchain Security</span>
+                    <Lock size={20} className="mr-2 text-yellow-400 flex-shrink-0" />
+                    <span className="text-sm">Blockchain Security</span>
                   </div>
                 </div>
               </div>
@@ -461,10 +463,10 @@ function ProjectDetails() {
                 </div>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">{project.extended.description}</p>
-              
+
               {/* Advantages */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('advantages')}
                 >
@@ -485,7 +487,7 @@ function ProjectDetails() {
 
               {/* Disadvantages */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('disadvantages')}
                 >
@@ -506,7 +508,7 @@ function ProjectDetails() {
 
               {/* Q&A */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('qna')}
                 >
@@ -548,7 +550,7 @@ function ProjectDetails() {
 
               {/* Impacts */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('impacts')}
                 >
@@ -569,7 +571,7 @@ function ProjectDetails() {
 
               {/* Risks */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('risks')}
                 >
@@ -590,7 +592,7 @@ function ProjectDetails() {
 
               {/* Challenges */}
               <div className="mb-6">
-                <div 
+                <div
                   className="flex justify-between items-center cursor-pointer p-3 bg-gray-700 rounded-lg border border-yellow-600/30"
                   onClick={() => toggleSection('challenges')}
                 >
@@ -612,9 +614,9 @@ function ProjectDetails() {
               {/* Updates */}
               <div className="mb-6">
                 <h3 className="text-xl font-semibold mb-3 flex items-center gap-2 text-yellow-400">
-                    <Calendar className="text-yellow-500" />
-                    Update Schedule
-                  </h3>
+                  <Calendar className="text-yellow-500" />
+                  Update Schedule
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-700 p-3 rounded-lg border border-yellow-600/30">
                     <p className="text-yellow-400 text-sm font-medium">Daily Updates</p>
@@ -662,7 +664,7 @@ function ProjectDetails() {
                     </p>
                   )}
                 </div>
-                
+
                 <div className="bg-gray-700 p-4 rounded-lg border border-yellow-600/30">
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-300">Your Contribution:</span>
@@ -674,14 +676,14 @@ function ProjectDetails() {
                   </div>
                   <div className="text-xs text-gray-400 mt-2">(after 100% equity)</div>
                 </div>
-                
+
                 <button
                   type="submit"
                   className="w-full bg-gradient-to-r from-gray-800 to-yellow-600 text-white font-bold py-3 rounded-lg hover:opacity-90 transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={!amount || numericAmount < project.start}
                 >
-                  {amount && numericAmount < project.start ? 
-                    `Minimum ${project.start} AED` : 
+                  {amount && numericAmount < project.start ?
+                    `Minimum ${project.start} AED` :
                     "Confirm Investment"
                   }
                 </button>
@@ -694,7 +696,7 @@ function ProjectDetails() {
                 <TrendingUp className="text-yellow-500" />
                 Financial Overview
               </h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-semibold mb-2 text-yellow-400">Fundraising</h3>
@@ -729,7 +731,7 @@ function ProjectDetails() {
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h3 className="text-lg font-semibold mb-2 text-yellow-400">Projections</h3>
                   <div className="space-y-2">
@@ -748,7 +750,7 @@ function ProjectDetails() {
                   </div>
                 </div>
               </div>
-              
+
               <a
                 href={project.extended.website}
                 target="_blank"
@@ -805,7 +807,7 @@ function ProjectDetails() {
                   </>
                 )}
               </button>
-              
+
               <div className="relative flex-1">
                 <button
                   onClick={() => setShowShareOptions(!showShareOptions)}
@@ -813,7 +815,7 @@ function ProjectDetails() {
                 >
                   <Share2 size={18} /> Share
                 </button>
-                
+
                 {showShareOptions && (
                   <div className="absolute left-0 right-0 top-full mt-2 bg-gray-800 border border-yellow-600/30 rounded-lg shadow-lg p-3 grid grid-cols-2 gap-2 z-50">
                     <button
